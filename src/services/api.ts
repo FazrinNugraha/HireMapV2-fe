@@ -1,9 +1,8 @@
 import type {
   AiChatRequest,
   AiChatResponse,
+  LocationDetailResponse,
   MetadataResponse,
-  SalaryEvaluationRequest,
-  SalaryEvaluationResponse,
   SalaryPredictionRequest,
   SalaryPredictionResponse,
   SpatialSummaryItem,
@@ -48,13 +47,6 @@ export function predictSalary(payload: SalaryPredictionRequest) {
   })
 }
 
-export function evaluateSalary(payload: SalaryEvaluationRequest) {
-  return apiRequest<SalaryEvaluationResponse>('/api/salary/evaluate', {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  })
-}
-
 export function sendAiChat(payload: AiChatRequest) {
   return apiRequest<AiChatResponse>('/api/ai/chat', {
     method: 'POST',
@@ -64,6 +56,13 @@ export function sendAiChat(payload: AiChatRequest) {
 
 export function getSpatialSummary() {
   return apiRequest<SpatialSummaryItem[]>('/api/spatial/summary')
+}
+
+export function getLocationDetail(location: string, category?: string) {
+  const categoryParam = category ? `&category=${encodeURIComponent(category)}` : ''
+  return apiRequest<LocationDetailResponse>(
+    `/api/spatial/location-detail?location=${encodeURIComponent(location)}${categoryParam}`
+  )
 }
 
 export { API_BASE_URL }

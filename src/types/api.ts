@@ -47,27 +47,6 @@ export type SalaryPredictionResponse = {
   rasio_kos: number
 }
 
-export type SalaryEvaluationRequest = {
-  input_salary: number
-  prediction: SalaryPredictionResponse
-}
-
-export type SalaryEvaluationResponse = {
-  input_salary: number
-  status: {
-    label: string
-    level: string
-    desc: string
-  }
-  delta_text: string
-  bar_position: number
-  range: {
-    min_wajar: number
-    estimasi: number
-    max_nego: number
-  }
-}
-
 export type ChatMessage = {
   role: 'user' | 'assistant'
   content: string
@@ -87,6 +66,16 @@ export type SpatialSummaryItem = {
   Lokasi_Clean: string
   Jumlah_Lowongan: number
   Harga_Kos_Estimasi: number
+  lat: number
+  lon: number
+}
+
+export type LocationDetailResponse = {
+  lokasi: string
+  total_jobs: number
+  kos_estimasi: number
+  category_jobs: number | null
+  top_categories: string[]
   lat: number
   lon: number
 }

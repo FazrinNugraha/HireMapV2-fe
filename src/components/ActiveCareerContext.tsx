@@ -9,60 +9,76 @@ type ActiveCareerContextProps = {
 export function ActiveCareerContext({ prediction, onGoToSalary }: ActiveCareerContextProps) {
   if (!prediction) {
     return (
-      <section className="rounded-[32px] bg-white p-8 shadow-[0_4px_20px_rgba(0,0,0,0.05)] md:col-span-4">
-        <h2 className="mb-2 text-xl font-semibold text-[#000000]">Active Career Context</h2>
-        <p className="text-sm leading-6 text-[#464742]">
-          Run a salary prediction first so the AI can give personalized advice.
+      <section className="rounded-[32px] bg-white p-8 shadow-[0_4px_20px_rgba(0,0,0,0.06)] md:col-span-4">
+        <p className="eyebrow">Career Context</p>
+        <h2 className="mt-3 text-xl font-semibold tracking-[-0.02em] text-[#141413]">
+          Belum ada data prediksi
+        </h2>
+        <p className="mt-2 text-sm leading-6 text-[#696969]">
+          Jalankan prediksi gaji terlebih dahulu agar AI bisa memberi saran yang lebih personal dan akurat.
         </p>
         <button
-          className="mt-6 rounded-full bg-[#000000] px-5 py-3 text-sm font-semibold text-white"
+          className="mt-6 rounded-[20px] border-[1.5px] border-[#141413] bg-white px-5 py-3 text-sm font-semibold text-[#141413] transition-all hover:bg-[#141413] hover:text-[#F3F0EE]"
           type="button"
           onClick={onGoToSalary}
         >
-          Go to Salary Prediction
+          Ke Salary Prediction →
         </button>
+
+        {/* Career tip */}
+        <div className="mt-6 rounded-[24px] bg-[#F3F0EE] p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.04em] text-[#696969]">
+            💡 Tips
+          </p>
+          <p className="mt-2 text-sm leading-6 text-[#555555]">
+            Gaji di Jabodetabek sangat bervariasi. Lokasi, sertifikasi, dan pengalaman bisa mempengaruhi hingga <strong className="text-[#141413]">40%+</strong> dari gaji basis.
+          </p>
+        </div>
       </section>
     )
   }
 
   return (
     <aside className="flex flex-col gap-6 md:col-span-4">
-      <section className="rounded-[32px] bg-white p-8 shadow-[0_4px_20px_rgba(0,0,0,0.05)]">
+      <section className="rounded-[32px] bg-white p-8 shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
         <div className="mb-6">
-          <h2 className="mb-2 text-xl font-semibold text-[#000000]">Active Career Context</h2>
-          <p className="text-sm leading-6 text-[#464742]">Based on your recent prediction.</p>
+          <p className="eyebrow">Career Context</p>
+          <h2 className="mt-3 text-xl font-semibold tracking-[-0.02em] text-[#141413]">
+            Prediksi aktif
+          </h2>
+          <p className="mt-1 text-sm text-[#696969]">Berdasarkan prediksi terbaru Anda.</p>
         </div>
 
-        <div className="flex flex-col gap-4">
-          <ContextRow label="Position" value={prediction.judul} />
-          <ContextRow label="Location" value={prediction.lokasi} />
-          <ContextRow label="Experience" value={prediction.pengalaman} />
-          <ContextRow label="Education" value={prediction.pendidikan} />
+        <div className="flex flex-col gap-3">
+          <ContextRow label="Posisi" value={prediction.judul} />
+          <ContextRow label="Lokasi" value={prediction.lokasi} />
+          <ContextRow label="Pengalaman" value={prediction.pengalaman} />
+          <ContextRow label="Pendidikan" value={prediction.pendidikan} />
         </div>
 
-        <div className="mt-6 rounded-[24px] bg-[#efeee7] p-4">
+        <div className="mt-6 rounded-[24px] bg-[#EFEEE7] p-5">
           <div className="mb-4">
-            <span className="text-xs uppercase tracking-wider text-[#464742]">
+            <span className="text-[11px] font-bold uppercase tracking-[0.04em] text-[#696969]">
               Predicted Salary
             </span>
-            <div className="text-3xl font-semibold text-[#000000]">
+            <div className="mt-1 text-3xl font-semibold tracking-[-0.02em] text-[#141413]">
               {formatRupiah(prediction.gaji_prediksi)}
             </div>
-            <div className="mt-1 text-xs text-[#aa3700]">
-              Range: {formatRupiah(prediction.gaji_min)} - {formatRupiah(prediction.gaji_max)}
+            <div className="mt-1 text-xs font-semibold text-[#AA3700]">
+              Range: {formatRupiah(prediction.gaji_min)} – {formatRupiah(prediction.gaji_max)}
             </div>
           </div>
 
           <div className="flex justify-between rounded-[18px] bg-white p-3">
             <div>
-              <span className="block text-xs text-[#464742]">Est. Kos</span>
-              <span className="font-medium text-[#000000]">
+              <span className="block text-[11px] font-semibold text-[#696969]">Est. Kos</span>
+              <span className="text-sm font-semibold text-[#141413]">
                 {formatRupiah(prediction.estimasi_kos)}
               </span>
             </div>
             <div className="text-right">
-              <span className="block text-xs text-[#464742]">Income Ratio</span>
-              <span className="font-bold text-[#aa3700]">
+              <span className="block text-[11px] font-semibold text-[#696969]">Rasio Kos</span>
+              <span className="text-sm font-bold text-[#AA3700]">
                 {prediction.rasio_kos.toFixed(1)}%
               </span>
             </div>
@@ -70,10 +86,15 @@ export function ActiveCareerContext({ prediction, onGoToSalary }: ActiveCareerCo
         </div>
       </section>
 
-      <section className="hidden h-48 overflow-hidden rounded-[32px] bg-[#efeee7] md:block">
-        <div className="flex h-full items-center justify-center bg-gradient-to-br from-[#efeee7] to-[#e4e2dc] text-sm text-[#464742]">
-          AI context illustration placeholder
-        </div>
+      {/* Negotiation tip card */}
+      <section className="rounded-[32px] bg-[#141413] p-6 text-white">
+        <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.04em] text-white/40">
+          <span className="text-base leading-none text-[#F37338]">•</span>
+          Negotiation Insight
+        </p>
+        <p className="mt-3 text-sm leading-6 text-white/70">
+          Confidence level prediksi: <strong className="text-white">{prediction.confidence_label}</strong>. Gunakan range <strong className="text-white">{formatRupiah(prediction.gaji_min)}–{formatRupiah(prediction.gaji_max)}</strong> sebagai anchor negosiasi.
+        </p>
       </section>
     </aside>
   )
@@ -81,10 +102,11 @@ export function ActiveCareerContext({ prediction, onGoToSalary }: ActiveCareerCo
 
 function ContextRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between gap-4 border-b border-[#e4e2dc] pb-2">
-      <span className="text-sm font-semibold text-[#464742]">{label}</span>
-      <span className="text-right text-sm font-medium text-[#000000]">{value}</span>
+    <div className="flex items-center justify-between gap-4 border-b border-[#E4E2DC] pb-3">
+      <span className="text-sm font-semibold text-[#696969]">{label}</span>
+      <span className="text-right text-sm font-semibold text-[#141413]">{value}</span>
     </div>
   )
 }
+
 

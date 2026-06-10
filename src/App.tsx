@@ -1,34 +1,31 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { FormEvent } from 'react'
 import { ErrorBanner } from './components/ErrorBanner'
 import { AppShell } from './components/layout/AppShell'
 import {
   DEFAULT_CHAT_MESSAGE,
   DEFAULT_SALARY_FORM,
-  DEFAULT_TARGET_SALARY,
 } from './constants/defaults'
 import { useMetadata } from './hooks/useMetadata'
 import { ConsultantPage } from './pages/ConsultantPage'
 import { SalaryPage } from './pages/SalaryPage'
 import { SpatialPage } from './pages/SpatialPage'
-import { evaluateSalary, predictSalary, sendAiChat } from './services/api'
+import { predictSalary, sendAiChat, getSpatialSummary } from './services/api'
 import type {
   ChatMessage,
-  SalaryEvaluationResponse,
   SalaryPredictionRequest,
   SalaryPredictionResponse,
+  SpatialSummaryItem,
 } from './types/api'
 import type { AppLayer } from './types/navigation'
 
 type LoadingState = {
   prediction: boolean
-  evaluation: boolean
   chat: boolean
 }
 
 const INITIAL_LOADING_STATE: LoadingState = {
   prediction: false,
-  evaluation: false,
   chat: false,
 }
 
@@ -36,8 +33,14 @@ export default function App() {
   const [activeLayer, setActiveLayer] = useState<AppLayer>('salary')
   const [form, setForm] = useState<SalaryPredictionRequest>(DEFAULT_SALARY_FORM)
   const [prediction, setPrediction] = useState<SalaryPredictionResponse | null>(null)
-  const [evaluation, setEvaluation] = useState<SalaryEvaluationResponse | null>(null)
-  const [targetSalary, setTargetSalary] = useState(DEFAULT_TARGET_SALARY)
+  const [spatialSummary, setSpatialSummary] = useState<SpatialSummaryItem[]>([])
+
+  useEffect(() => {
+    getSpatialSummary()
+      .then(setSpatialSummary)
+      .catch(console.error)
+  }, [])
+
   const [chatInput, setChatInput] = useState(DEFAULT_CHAT_MESSAGE)
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([])
   const [loading, setLoading] = useState<LoadingState>(INITIAL_LOADING_STATE)
@@ -56,14 +59,23 @@ export default function App() {
     if (!metadata || loading.prediction || form.job_title.trim().length === 0) return
 
     setError(null)
-    setEvaluation(null)
     setLoading((current) => ({ ...current, prediction: true }))
 
     try {
+      const startTime = Date.now()
+
       const result = await predictSalary({
         ...form,
         job_title: form.job_title.trim(),
       })
+
+      // Force loading state to stay active for 2.2 seconds (2200ms)
+      const elapsedTime = Date.now() - startTime
+      const delayNeeded = 2200 - elapsedTime
+      if (delayNeeded > 0) {
+        await new Promise((resolve) => setTimeout(resolve, delayNeeded))
+      }
+
       setPrediction(result)
       setChatHistory([])
     } catch (predictionError) {
@@ -73,30 +85,7 @@ export default function App() {
     }
   }
 
-  async function handleEvaluate() {
-    if (!prediction || loading.evaluation) return
 
-    const salaryInRupiah = Math.round(Number(targetSalary) * 1_000_000)
-    if (!Number.isFinite(salaryInRupiah) || salaryInRupiah <= 0) {
-      setError('Masukkan angka gaji evaluasi yang valid.')
-      return
-    }
-
-    setError(null)
-    setLoading((current) => ({ ...current, evaluation: true }))
-
-    try {
-      const result = await evaluateSalary({
-        input_salary: salaryInRupiah,
-        prediction,
-      })
-      setEvaluation(result)
-    } catch (evaluationError) {
-      setError(getErrorMessage(evaluationError, 'Gagal mengevaluasi gaji.'))
-    } finally {
-      setLoading((current) => ({ ...current, evaluation: false }))
-    }
-  }
 
   async function handleChat(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -135,15 +124,11 @@ export default function App() {
           form={form}
           metadata={metadata}
           prediction={prediction}
-          evaluation={evaluation}
-          targetSalary={targetSalary}
+          spatialSummary={spatialSummary}
           isMetadataLoading={isMetadataLoading}
           isPredicting={loading.prediction}
-          isEvaluating={loading.evaluation}
           onFormChange={setForm}
           onPredict={handlePredict}
-          onTargetSalaryChange={setTargetSalary}
-          onEvaluate={handleEvaluate}
         />
       )}
 
