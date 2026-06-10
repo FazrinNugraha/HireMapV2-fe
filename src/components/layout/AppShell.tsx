@@ -1,0 +1,20 @@
+import type { ReactNode } from 'react'
+import { AppFooter } from './AppFooter'
+import { AppTabs } from './AppTabs'
+import type { AppLayer } from '../../types/navigation'
+
+type AppShellProps = {
+  activeLayer: AppLayer
+  children: ReactNode
+  onLayerChange: (layer: AppLayer) => void
+}
+
+export function AppShell({ activeLayer, children, onLayerChange }: AppShellProps) {
+  return (
+    <div className="min-h-screen bg-[#fbf9f3] pt-24 text-[#1b1c18]">
+      <AppTabs activeLayer={activeLayer} onChange={onLayerChange} />
+      {children}
+      <AppFooter />
+    </div>
+  )
+}
