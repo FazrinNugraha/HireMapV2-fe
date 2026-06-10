@@ -7,6 +7,7 @@ import {
   DEFAULT_SALARY_FORM,
 } from './constants/defaults'
 import { useMetadata } from './hooks/useMetadata'
+import { AnalysisPage } from './pages/AnalysisPage'
 import { ConsultantPage } from './pages/ConsultantPage'
 import { SalaryPage } from './pages/SalaryPage'
 import { SpatialPage } from './pages/SpatialPage'
@@ -87,6 +88,12 @@ export default function App() {
 
 
 
+  // Called from FeasibilityScoreCard → navigate to AI Consultant and pre-fill the audit prompt
+  function handleRequestAudit(prompt: string) {
+    setChatInput(prompt)
+    setActiveLayer('consultant')
+  }
+
   async function handleChat(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
@@ -146,6 +153,15 @@ export default function App() {
           onChatInputChange={setChatInput}
           onQuickQuestion={setChatInput}
           onChatSubmit={handleChat}
+        />
+      )}
+
+      {activeLayer === 'analysis' && (
+        <AnalysisPage
+          prediction={prediction}
+          spatialSummary={spatialSummary}
+          onGoToSalary={() => setActiveLayer('salary')}
+          onRequestAudit={handleRequestAudit}
         />
       )}
     </AppShell>

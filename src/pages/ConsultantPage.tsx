@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react'
+import { useRef, type FormEvent } from 'react'
 import { ActiveCareerContext } from '../components/ActiveCareerContext'
 import { AiConsultantCard } from '../components/AiConsultantCard'
 import type { ChatMessage, SalaryPredictionResponse } from '../types/api'
@@ -24,6 +24,8 @@ export function ConsultantPage({
   onQuickQuestion,
   onChatSubmit,
 }: ConsultantPageProps) {
+  const formRef = useRef<HTMLFormElement>(null)
+
   return (
     <main className="mx-auto grid w-full max-w-[1280px] grid-cols-1 gap-6 px-5 py-8 md:grid-cols-12 md:px-10">
       <ActiveCareerContext prediction={prediction} onGoToSalary={onGoToSalary} />
@@ -32,6 +34,7 @@ export function ConsultantPage({
         chatHistory={chatHistory}
         isLoading={isChatLoading}
         hasPredictionContext={prediction !== null}
+        formRef={formRef}
         onChatInputChange={onChatInputChange}
         onQuickQuestion={onQuickQuestion}
         onSubmit={onChatSubmit}
@@ -39,4 +42,3 @@ export function ConsultantPage({
     </main>
   )
 }
-

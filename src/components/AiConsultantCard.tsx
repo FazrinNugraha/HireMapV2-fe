@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react'
+import type { FormEvent, RefObject } from 'react'
 import { QUICK_CHAT_QUESTIONS } from '../constants/defaults'
 import type { ChatMessage } from '../types/api'
 
@@ -7,6 +7,7 @@ type AiConsultantCardProps = {
   chatHistory: ChatMessage[]
   isLoading: boolean
   hasPredictionContext: boolean
+  formRef?: RefObject<HTMLFormElement>
   onChatInputChange: (value: string) => void
   onQuickQuestion: (value: string) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
@@ -17,6 +18,7 @@ export function AiConsultantCard({
   chatHistory,
   isLoading,
   hasPredictionContext,
+  formRef,
   onChatInputChange,
   onQuickQuestion,
   onSubmit,
@@ -61,7 +63,7 @@ export function AiConsultantCard({
       </div>
 
       {/* Input */}
-      <form className="border-t border-[#E4E2DC] bg-white p-5" onSubmit={onSubmit}>
+      <form className="border-t border-[#E4E2DC] bg-white p-5" onSubmit={onSubmit} ref={formRef}>
         <div className="flex items-center gap-3 rounded-full bg-[#EFEEE7] p-1.5 pl-5 focus-within:ring-2 focus-within:ring-[#141413]/20">
           <input
             className="min-w-0 flex-1 border-none bg-transparent text-sm text-[#141413] outline-none placeholder:text-[#696969]"
