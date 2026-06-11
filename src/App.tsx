@@ -107,11 +107,21 @@ export default function App() {
     setLoading((current) => ({ ...current, chat: true }))
 
     try {
+      const startTime = Date.now()
+
       const result = await sendAiChat({
         message,
         history: chatHistory,
         prediction_context: prediction,
       })
+
+      // Paksa animasi typing loading bertahan minimal 3 detik (3000ms)
+      const elapsedTime = Date.now() - startTime
+      const delayNeeded = 3000 - elapsedTime
+      if (delayNeeded > 0) {
+        await new Promise((resolve) => setTimeout(resolve, delayNeeded))
+      }
+
       setChatHistory([...nextHistory, { role: 'assistant', content: result.reply }])
     } catch (chatError) {
       setError(getErrorMessage(chatError, 'Gagal menghubungi AI consultant.'))

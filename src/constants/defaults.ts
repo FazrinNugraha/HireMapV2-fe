@@ -4,9 +4,9 @@ export const DEFAULT_SALARY_FORM: SalaryPredictionRequest = {
   job_title: 'Senior Programmer',
   category: 'IT, Tech & Data',
   location: 'Jakarta Selatan',
-  experience_level: '💼 Mid-Level (3-5 thn)',
-  education_level: '🎓 S1 / Sarjana',
-  certification_level: '📄 Tanpa Sertifikasi',
+  experience_level: 'Mid-Level (3-5 thn)',
+  education_level: 'S1 / Sarjana',
+  certification_level: 'Tanpa Sertifikasi',
 }
 
 export const DEFAULT_TARGET_SALARY = '9'

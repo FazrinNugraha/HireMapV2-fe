@@ -88,11 +88,26 @@ export function AiConsultantCard({
   )
 }
 
+const IconUser = (
+  <svg className="w-5 h-5 text-[#141413]" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </svg>
+)
+
+const IconConsultant = (
+  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+    <path d="m12 11 1 2-1 2-1-2z" />
+  </svg>
+)
+
 function WelcomeMessage({ hasPredictionContext }: { hasPredictionContext: boolean }) {
   return (
     <div className="flex max-w-[85%] gap-3">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#141413] text-[11px] font-bold text-white">
-        AI
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#141413] text-white">
+        {IconConsultant}
       </div>
       <div className="rounded-2xl rounded-tl-sm bg-[#E4E2DC] px-4 py-3 text-sm leading-6 text-[#141413]">
         {hasPredictionContext
@@ -106,8 +121,8 @@ function WelcomeMessage({ hasPredictionContext }: { hasPredictionContext: boolea
 function TypingIndicator() {
   return (
     <div className="flex max-w-[85%] gap-3">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#141413] text-[11px] font-bold text-white">
-        AI
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#141413] text-white">
+        {IconConsultant}
       </div>
       <div className="flex items-center gap-1.5 rounded-2xl rounded-tl-sm bg-[#E4E2DC] px-4 py-3">
         <span className="h-2 w-2 animate-bounce rounded-full bg-[#696969]" style={{ animationDelay: '0ms' }} />
@@ -124,18 +139,17 @@ function ChatBubble({ message }: { message: ChatMessage }) {
   return (
     <div className={`flex max-w-[85%] gap-3 ${isUser ? 'self-end flex-row-reverse' : ''}`}>
       <div
-        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${
-          isUser ? 'bg-[#EFEEE7] text-[#141413]' : 'bg-[#141413] text-white'
+        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
+          isUser ? 'bg-[#EFEEE7]' : 'bg-[#141413]'
         }`}
       >
-        {isUser ? 'U' : 'AI'}
+        {isUser ? IconUser : IconConsultant}
       </div>
       <div
-        className={`rounded-2xl px-4 py-3 text-sm leading-6 ${
-          isUser
+        className={`rounded-2xl px-4 py-3 text-sm leading-6 ${isUser
             ? 'rounded-tr-sm bg-[#141413] text-[#F3F0EE]'
             : 'rounded-tl-sm bg-[#E4E2DC] text-[#141413]'
-        }`}
+          }`}
       >
         {isUser ? message.content : parseMarkdown(message.content)}
       </div>

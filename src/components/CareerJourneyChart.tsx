@@ -35,14 +35,14 @@ function buildJourneySteps(prediction: SalaryPredictionResponse): JourneyStep[] 
     senior: 1.30,
   }
   const META = [
-    { key: 'fresh',  label: 'Fresh Graduate', sublabel: '< 1 tahun' },
-    { key: 'junior', label: 'Junior',          sublabel: '1–3 tahun' },
-    { key: 'mid',    label: 'Mid-Level',        sublabel: '3–7 tahun' },
-    { key: 'senior', label: 'Senior',           sublabel: '7+ tahun'  },
+    { key: 'fresh',  label: 'Entry-Level', sublabel: '< 1 tahun' },
+    { key: 'junior', label: 'Junior',      sublabel: '1–3 tahun' },
+    { key: 'mid',    label: 'Mid-Level',    sublabel: '3–7 tahun' },
+    { key: 'senior', label: 'Senior',       sublabel: '7+ tahun'  },
   ]
 
   function matchActive(key: string): boolean {
-    if (key === 'fresh'  && (activeLabel.includes('fresh') || activeLabel.includes('< 1')))  return true
+    if (key === 'fresh'  && (activeLabel.includes('entry') || activeLabel.includes('< 1')))  return true
     if (key === 'junior' && activeLabel.includes('junior'))                                    return true
     if (key === 'mid'    && (activeLabel.includes('mid')   || activeLabel.includes('staff'))) return true
     if (key === 'senior' && activeLabel.includes('senior'))                                    return true
@@ -246,7 +246,7 @@ export function CareerJourneyChart({ prediction }: { prediction: SalaryPredictio
           <strong className="text-[#141413]">{prediction.judul}</strong> di{' '}
           <strong className="text-[#141413]">{prediction.lokasi}</strong> —
           potensi kenaikan total{' '}
-          <strong className="text-[#F37338]">+{totalGrowth}%</strong> dari Fresh Graduate ke Senior.
+          <strong className="text-[#F37338]">+{totalGrowth}%</strong> dari Entry-Level ke Senior.
         </p>
 
         {/* Chart.js Line */}

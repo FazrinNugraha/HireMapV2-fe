@@ -85,7 +85,13 @@ export function SalaryPage({
           </div>
         ) : (
           <div className="flex h-full min-h-[420px] flex-col items-center justify-center rounded-[32px] border-2 border-dashed border-[#D1CDC7] bg-[#FCFBFA]/50 p-10 text-center">
-            <span className="text-4xl">🎯</span>
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFEEE7] text-[#696969] mb-2">
+              <svg className="w-8 h-8 text-[#696969]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="6" />
+                <circle cx="12" cy="12" r="2" />
+              </svg>
+            </div>
             <h3 className="mt-4 text-lg font-bold text-[#141413]">Sistem Pendukung Keputusan Belum Aktif</h3>
             <p className="mt-2 max-w-sm text-sm leading-6 text-[#696969]">
               Isi data posisi, kategori, dan lokasi kerja Anda pada panel input di sebelah kiri, lalu klik tombol untuk memproses analisis keputusan karir &amp; finansial.
