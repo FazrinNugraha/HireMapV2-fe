@@ -14,6 +14,7 @@ type ConsultantPageProps = {
   onChatSubmit: (event: FormEvent<HTMLFormElement>) => void;
 };
 
+// Halaman AI Consultant: konteks prediksi di kiri, chat rekomendasi di kanan.
 export function ConsultantPage({
   prediction,
   chatInput,
@@ -24,6 +25,7 @@ export function ConsultantPage({
   onQuickQuestion,
   onChatSubmit,
 }: ConsultantPageProps) {
+  // Ref dipakai komponen chat untuk submit/focus form dari quick action.
   const formRef = useRef<HTMLFormElement>(null);
 
   return (

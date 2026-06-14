@@ -2,7 +2,6 @@ import { useEffect, useMemo } from 'react'
 import { CircleMarker, MapContainer, TileLayer, Tooltip, useMap } from 'react-leaflet'
 import type { LatLngExpression } from 'leaflet'
 import type { SpatialSummaryItem } from '../../types/api'
-import { formatRupiah } from '../../utils/format'
 import 'leaflet/dist/leaflet.css'
 
 type SpatialLeafletMapProps = {
