@@ -29,7 +29,7 @@ export function AiConsultantCard({
   onSubmit,
 }: AiConsultantCardProps) {
   return (
-    <section className="flex h-[calc(100vh-130px)] min-h-[700px] flex-col overflow-hidden rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)] md:col-span-8">
+    <section className="flex h-full min-h-[700px] min-w-0 flex-col overflow-hidden rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)] md:col-span-8">
       {/* Header */}
       <div className="border-b border-[#E4E2DC] bg-white p-6 md:p-7">
         <FeatureHeader
@@ -190,7 +190,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
         className={`rounded-2xl px-4 py-3 text-sm leading-6 ${
           isUser
             ? "rounded-tr-sm bg-[#141413] text-[#F3F0EE]"
-            : "rounded-tl-sm bg-[#E4E2DC] text-[#141413]"
+            : "max-h-[360px] overflow-y-auto rounded-tl-sm bg-[#E4E2DC] text-[#141413]"
         }`}
       >
         {isUser ? message.content : parseMarkdown(message.content)}

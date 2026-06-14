@@ -17,7 +17,7 @@ export function ActiveCareerContext({
 }: ActiveCareerContextProps) {
   if (!prediction) {
     return (
-      <section className="rounded-[32px] bg-white p-8 shadow-[0_4px_20px_rgba(0,0,0,0.06)] md:col-span-4">
+      <section className="flex h-full min-h-[700px] min-w-0 flex-col rounded-[32px] bg-white p-8 shadow-[0_4px_20px_rgba(0,0,0,0.06)] md:col-span-4">
         <FeatureHeader title="Career Context" />
         <h2 className="mt-3 text-xl font-semibold tracking-[-0.02em] text-[#141413]">
           Belum ada data prediksi
@@ -31,13 +31,13 @@ export function ActiveCareerContext({
           type="button"
           onClick={onGoToSalary}
         >
-          Ke Salary Prediction →
+          Ke Salary Prediction
         </button>
 
         {/* Career tip */}
-        <div className="mt-6 rounded-[24px] bg-[#F3F0EE] p-5">
+        <div className="mt-auto rounded-[24px] bg-[#F3F0EE] p-5">
           <p className="text-xs font-semibold uppercase tracking-[0.04em] text-[#696969]">
-            💡 Tips
+            Tips
           </p>
           <p className="mt-2 text-sm leading-6 text-[#555555]">
             Gaji di Jabodetabek sangat bervariasi. Lokasi, sertifikasi, dan
@@ -50,8 +50,8 @@ export function ActiveCareerContext({
   }
 
   return (
-    <aside className="flex flex-col gap-6 md:col-span-4">
-      <section className="rounded-[32px] bg-white p-8 shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
+    <aside className="flex h-full min-h-[700px] min-w-0 flex-col gap-6 md:col-span-4">
+      <section className="flex flex-1 flex-col rounded-[32px] bg-white p-8 shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
         <div className="mb-6">
           <FeatureHeader title="Career Context" />
           <h2 className="mt-3 text-xl font-semibold tracking-[-0.02em] text-[#141413]">
@@ -78,7 +78,7 @@ export function ActiveCareerContext({
               {formatRupiah(prediction.gaji_prediksi)}
             </div>
             <div className="mt-1 text-xs font-semibold text-[#AA3700]">
-              Range: {formatRupiah(prediction.gaji_min)} –{" "}
+              Range: {formatRupiah(prediction.gaji_min)} -{" "}
               {formatRupiah(prediction.gaji_max)}
             </div>
           </div>
@@ -105,7 +105,7 @@ export function ActiveCareerContext({
       </section>
 
       {/* Negotiation tip card */}
-      <section className="rounded-[32px] bg-[#141413] p-6 text-white">
+      <section className="shrink-0 rounded-[32px] bg-[#141413] p-6 text-white">
         <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.04em] text-white/40">
           <span className="text-base leading-none text-[#F37338]">•</span>
           Negotiation Insight
@@ -115,7 +115,7 @@ export function ActiveCareerContext({
           <strong className="text-white">{prediction.confidence_label}</strong>.
           Gunakan range{" "}
           <strong className="text-white">
-            {formatRupiah(prediction.gaji_min)}–
+            {formatRupiah(prediction.gaji_min)}-
             {formatRupiah(prediction.gaji_max)}
           </strong>{" "}
           sebagai anchor negosiasi.
