@@ -101,8 +101,7 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
               {formatRupiah(prediction.gaji_prediksi)}
             </h3>
             <p className="mt-2 text-sm leading-6 text-[#696969]">
-              Estimasi model berdasarkan profil pekerjaan dan faktor
-              kualifikasi.
+              Estimasi model berdasarkan posisi pekerjaan, pengalaman, pendidikan, dan sertifikasi.
             </p>
           </div>
 
@@ -134,10 +133,10 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
           <div className="flex items-center justify-between gap-4">
             <div className="flex shrink-0 items-center gap-2">
               <span className="h-2 w-2 shrink-0 rounded-full bg-[#F37338]" />
-              <span>Posisi & Lokasi</span>
+              <span>Posisi Pekerjaan</span>
             </div>
             <span className="truncate text-right font-semibold text-[#141413]">
-              {prediction.judul} di {prediction.lokasi}
+              {prediction.judul}
             </span>
           </div>
         </div>

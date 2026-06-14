@@ -27,7 +27,7 @@ export function ConsultantPage({
   const formRef = useRef<HTMLFormElement>(null);
 
   return (
-    <main className="mx-auto grid w-full max-w-[1280px] grid-cols-1 gap-6 px-5 py-8 md:grid-cols-12 md:px-10">
+    <main className="mx-auto grid w-full max-w-[1280px] grid-cols-1 items-stretch gap-6 px-5 py-8 md:grid-cols-12 md:px-10">
       <ActiveCareerContext
         prediction={prediction}
         onGoToSalary={onGoToSalary}

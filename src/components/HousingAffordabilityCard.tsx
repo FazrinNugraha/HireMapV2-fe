@@ -104,6 +104,10 @@ export function HousingAffordabilityCard({
             <div className="mt-0.5 text-sm font-normal text-[#696969]">
               per bulan
             </div>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-[#696969]">
+              Estimasi model berdasarkan kriteria kos campur, termasuk listrik,
+              dan luas kamar 3 x 4.
+            </p>
           </div>
 
           <div className="relative flex items-center justify-center shrink-0 w-20 h-20">
