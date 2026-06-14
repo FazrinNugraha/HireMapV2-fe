@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { ErrorBanner } from './components/ErrorBanner'
 import { AppShell } from './components/layout/AppShell'
@@ -11,7 +11,7 @@ import { AnalysisPage } from './pages/AnalysisPage'
 import { ConsultantPage } from './pages/ConsultantPage'
 import { SalaryPage } from './pages/SalaryPage'
 import { SpatialPage } from './pages/SpatialPage'
-import { predictSalary, sendAiChat, getSpatialSummary } from './services/api'
+import { getSpatialSummary, predictSalary, sendAiChat } from './services/api'
 import type {
   ChatMessage,
   SalaryPredictionRequest,
@@ -19,6 +19,9 @@ import type {
   SpatialSummaryItem,
 } from './types/api'
 import type { AppLayer } from './types/navigation'
+
+const PREDICTION_LOADING_DELAY_MS = 2200
+const CHAT_LOADING_DELAY_MS = 3000
 
 type LoadingState = {
   prediction: boolean
@@ -30,18 +33,12 @@ const INITIAL_LOADING_STATE: LoadingState = {
   chat: false,
 }
 
+// Root aplikasi: menyimpan state global yang dipakai lintas tab.
 export default function App() {
   const [activeLayer, setActiveLayer] = useState<AppLayer>('salary')
   const [form, setForm] = useState<SalaryPredictionRequest>(DEFAULT_SALARY_FORM)
   const [prediction, setPrediction] = useState<SalaryPredictionResponse | null>(null)
   const [spatialSummary, setSpatialSummary] = useState<SpatialSummaryItem[]>([])
-
-  useEffect(() => {
-    getSpatialSummary()
-      .then(setSpatialSummary)
-      .catch(console.error)
-  }, [])
-
   const [chatInput, setChatInput] = useState(DEFAULT_CHAT_MESSAGE)
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([])
   const [loading, setLoading] = useState<LoadingState>(INITIAL_LOADING_STATE)
@@ -55,79 +52,82 @@ export default function App() {
 
   const visibleError = error ?? metadataError
 
+  // Data spasial dipakai oleh Analisis Karir untuk DSS score.
+  useEffect(() => {
+    getSpatialSummary()
+      .then(setSpatialSummary)
+      .catch(console.error)
+  }, [])
+
+  // Submit form salary, lalu simpan hasilnya sebagai konteks global aplikasi.
   async function handlePredict(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (!metadata || loading.prediction || form.job_title.trim().length === 0) return
+
+    const jobTitle = form.job_title.trim()
+    if (!metadata || loading.prediction || jobTitle.length === 0) return
 
     setError(null)
-    setLoading((current) => ({ ...current, prediction: true }))
+    setLoadingState('prediction', true)
 
     try {
-      const startTime = Date.now()
+      const startedAt = Date.now()
+      const result = await predictSalary({ ...form, job_title: jobTitle })
 
-      const result = await predictSalary({
-        ...form,
-        job_title: form.job_title.trim(),
-      })
-
-      // Force loading state to stay active for 2.2 seconds (2200ms)
-      const elapsedTime = Date.now() - startTime
-      const delayNeeded = 2200 - elapsedTime
-      if (delayNeeded > 0) {
-        await new Promise((resolve) => setTimeout(resolve, delayNeeded))
-      }
+      await waitForMinimumDuration(startedAt, PREDICTION_LOADING_DELAY_MS)
 
       setPrediction(result)
       setChatHistory([])
     } catch (predictionError) {
       setError(getErrorMessage(predictionError, 'Gagal menghitung prediksi gaji.'))
     } finally {
-      setLoading((current) => ({ ...current, prediction: false }))
+      setLoadingState('prediction', false)
     }
   }
 
-
-
-  // Called from FeasibilityScoreCard → navigate to AI Consultant and pre-fill the audit prompt
+  // Dari DSS score, user bisa langsung membuka AI Consultant dengan prompt audit.
   function handleRequestAudit(prompt: string) {
     setChatInput(prompt)
     setActiveLayer('consultant')
   }
 
+  // Submit pesan chat dan tambahkan balasan AI ke history.
   async function handleChat(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const message = chatInput.trim()
     if (!message || loading.chat) return
 
-    const nextHistory: ChatMessage[] = [...chatHistory, { role: 'user', content: message }]
+    const nextHistory: ChatMessage[] = [
+      ...chatHistory,
+      { role: 'user', content: message },
+    ]
+
     setChatHistory(nextHistory)
     setChatInput('')
     setError(null)
-    setLoading((current) => ({ ...current, chat: true }))
+    setLoadingState('chat', true)
 
     try {
-      const startTime = Date.now()
-
+      const startedAt = Date.now()
       const result = await sendAiChat({
         message,
         history: chatHistory,
         prediction_context: prediction,
       })
 
-      // Paksa animasi typing loading bertahan minimal 3 detik (3000ms)
-      const elapsedTime = Date.now() - startTime
-      const delayNeeded = 3000 - elapsedTime
-      if (delayNeeded > 0) {
-        await new Promise((resolve) => setTimeout(resolve, delayNeeded))
-      }
+      await waitForMinimumDuration(startedAt, CHAT_LOADING_DELAY_MS)
 
       setChatHistory([...nextHistory, { role: 'assistant', content: result.reply }])
     } catch (chatError) {
       setError(getErrorMessage(chatError, 'Gagal menghubungi AI consultant.'))
     } finally {
-      setLoading((current) => ({ ...current, chat: false }))
+      setLoadingState('chat', false)
     }
+  }
+
+  // Helper kecil agar update loading per fitur tetap konsisten.
+  function setLoadingState(key: keyof LoadingState, value: boolean) {
+    setLoading((current) => ({ ...current, [key]: value }))
   }
 
   return (
@@ -141,7 +141,6 @@ export default function App() {
           form={form}
           metadata={metadata}
           prediction={prediction}
-          spatialSummary={spatialSummary}
           isMetadataLoading={isMetadataLoading}
           isPredicting={loading.prediction}
           onFormChange={setForm}
@@ -151,6 +150,15 @@ export default function App() {
 
       {activeLayer === 'spatial' && (
         <SpatialPage metadata={metadata} prediction={prediction} />
+      )}
+
+      {activeLayer === 'analysis' && (
+        <AnalysisPage
+          prediction={prediction}
+          spatialSummary={spatialSummary}
+          onGoToSalary={() => setActiveLayer('salary')}
+          onRequestAudit={handleRequestAudit}
+        />
       )}
 
       {activeLayer === 'consultant' && (
@@ -165,20 +173,20 @@ export default function App() {
           onChatSubmit={handleChat}
         />
       )}
-
-      {activeLayer === 'analysis' && (
-        <AnalysisPage
-          prediction={prediction}
-          spatialSummary={spatialSummary}
-          onGoToSalary={() => setActiveLayer('salary')}
-          onRequestAudit={handleRequestAudit}
-        />
-      )}
     </AppShell>
   )
+}
+
+// Menjaga loading minimal agar transisi UI tidak terasa terlalu mendadak.
+async function waitForMinimumDuration(startedAt: number, minimumDuration: number) {
+  const elapsedTime = Date.now() - startedAt
+  const delayNeeded = minimumDuration - elapsedTime
+
+  if (delayNeeded > 0) {
+    await new Promise((resolve) => setTimeout(resolve, delayNeeded))
+  }
 }
 
 function getErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback
 }
-

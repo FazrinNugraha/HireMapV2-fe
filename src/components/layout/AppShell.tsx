@@ -9,6 +9,7 @@ type AppShellProps = {
   onLayerChange: (layer: AppLayer) => void
 }
 
+// Kerangka global aplikasi: navbar atas, konten halaman aktif, lalu footer.
 export function AppShell({ activeLayer, children, onLayerChange }: AppShellProps) {
   return (
     <div className="min-h-screen bg-[#fbf9f3] pt-24 text-[#1b1c18]">
