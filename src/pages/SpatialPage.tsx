@@ -91,7 +91,7 @@ export function SpatialPage({ metadata, prediction }: SpatialPageProps) {
   const sweetLabel = getSweetSpotLabel(sweetSpotScore);
 
   return (
-    <main className="mx-auto flex w-full max-w-[1280px] flex-col gap-8 px-5 py-10 md:px-10">
+    <main className="page-shell flex flex-col gap-6 md:gap-8">
       <SpatialHeader />
 
       <SpatialFilterBar
@@ -133,11 +133,11 @@ export function SpatialPage({ metadata, prediction }: SpatialPageProps) {
 // Header halaman Spatial Map.
 function SpatialHeader() {
   return (
-    <section className="max-w-2xl">
-      <h1 className="text-4xl font-semibold tracking-[-0.02em] text-[#141413] md:text-5xl">
+    <section>
+      <h1 className="page-title">
         Spatial Career Map
       </h1>
-      <p className="mt-3 text-lg leading-8 text-[#696969]">
+      <p className="page-description">
         Bandingkan peluang kerja dan biaya hidup di seluruh Jabodetabek.
       </p>
     </section>
@@ -161,7 +161,7 @@ function SpatialFilterBar({
   onLocationChange: (value: string) => void;
 }) {
   return (
-    <div className="flex w-fit max-w-full flex-wrap items-center gap-3 rounded-[40px] border border-[#E5E2E0] bg-white p-3 shadow-[0_4px_20px_rgba(0,0,0,0.05)]">
+    <div className="grid w-full gap-2 rounded-[24px] border border-[#E5E2E0] bg-white p-2 shadow-[0_4px_20px_rgba(0,0,0,0.05)] sm:w-fit sm:max-w-full sm:grid-flow-col sm:auto-cols-max sm:items-center sm:gap-3 sm:rounded-[40px] sm:p-3">
       <SelectField
         value={selectedCategory}
         options={[ALL_INDUSTRIES, ...categories]}
@@ -211,7 +211,7 @@ function SpatialMapSection({
   onSelectLocation: (location: string) => void;
 }) {
   return (
-    <section className="grid min-h-[600px] grid-cols-1 gap-6 lg:grid-cols-12">
+    <section className="grid grid-cols-1 gap-5 lg:min-h-[600px] lg:grid-cols-12 lg:gap-6">
       <div className="lg:col-span-8">
         <SpatialLeafletMap
           data={summary}
@@ -220,8 +220,8 @@ function SpatialMapSection({
         />
       </div>
 
-      <aside className="flex h-[560px] flex-col lg:col-span-4">
-        <div className="flex h-full flex-col rounded-[32px] border border-[#E5E2E0] bg-white p-7 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+      <aside className="flex min-h-[360px] flex-col lg:col-span-4 lg:h-[560px]">
+        <div className="flex h-full flex-col rounded-[24px] border border-[#E5E2E0] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.08)] md:rounded-[32px] md:p-7">
           <LocationDetailPanel
             detail={locationDetail}
             selectedCategory={selectedCategory}

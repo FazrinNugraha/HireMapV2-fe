@@ -290,7 +290,7 @@ export function CommuterOptionsCard({
   };
 
   return (
-    <div className="rounded-[32px] border border-[#E5E2E0] bg-white p-7 shadow-[0_8px_30px_rgba(0,0,0,0.06)] animate-fade-slide-down">
+    <div className="animate-fade-slide-down rounded-[24px] border border-[#E5E2E0] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.06)] md:rounded-[32px] md:p-7">
       <div className="mb-5">
         <FeatureHeader
           title="Simulator Opsi Komuter"
@@ -307,28 +307,30 @@ export function CommuterOptionsCard({
         />
       </div>
 
-      <div className="grid gap-4">
-        <div className="rounded-[20px] bg-[#3860BE]/10 border border-[#3860BE]/20 px-4 py-3 text-sm font-medium text-[#3860BE] leading-6">
-          Rute memakai OSRM berbasis OpenStreetMap. Mobil memakai rute utama,
-          motor memakai alternatif jika tersedia dan durasinya disesuaikan,
-          belum termasuk traffic real-time.
-        </div>
-
-        <div className="rounded-[20px] border border-[#E5E2E0] bg-[#FCFBFA] p-4">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <h4 className="text-sm font-extrabold uppercase tracking-[0.04em] text-[#696969]">
-              Pilih Kota Komuter
-            </h4>
+      <div className="grid gap-3">
+        <div className="rounded-[18px] border border-[#E5E2E0] bg-[#FCFBFA] p-3.5">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h4 className="text-[11px] font-bold uppercase tracking-[0.04em] text-[#696969]">
+                Kota asal komuter
+              </h4>
+              <p className="mt-0.5 text-xs text-[#A0A09A]">
+                {selectedLocations.length > 0
+                  ? `${selectedLocations.length} kota dipilih`
+                  : "Pilih satu atau beberapa kota"}
+              </p>
+            </div>
             <button
               type="button"
               onClick={() => setSelectedLocations([])}
-              className="text-xs font-bold uppercase tracking-[0.04em] text-[#3860BE] transition hover:text-[#141413]"
+              className="rounded-full border border-[#3860BE]/25 bg-[#3860BE]/10 px-3.5 py-1.5 text-[11px] font-bold text-[#3860BE] shadow-[0_0_18px_rgba(56,96,190,0.16)] transition hover:border-[#3860BE]/45 hover:bg-[#3860BE]/15 disabled:cursor-not-allowed disabled:border-[#E5E2E0] disabled:bg-white disabled:text-[#A0A09A] disabled:shadow-none"
+              disabled={selectedLocations.length === 0}
             >
               Reset
             </button>
           </div>
 
-          <div className="flex max-h-[132px] flex-wrap gap-2 overflow-y-auto pr-1">
+          <div className="grid max-h-[128px] grid-cols-2 gap-1.5 overflow-y-auto pr-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {commuterOptions.map((option) => {
               const isSelected = selectedLocations.includes(option.lokasi);
 
@@ -337,10 +339,10 @@ export function CommuterOptionsCard({
                   type="button"
                   key={option.lokasi}
                   onClick={() => toggleLocation(option.lokasi)}
-                  className={`rounded-full border px-4 py-2.5 text-xs font-bold uppercase tracking-[0.04em] transition ${
+                  className={`min-h-9 rounded-full border px-3 py-1.5 text-center text-xs font-semibold leading-5 transition ${
                     isSelected
-                      ? "border-[#141413] bg-[#141413] text-white"
-                      : "border-[#E5E2E0] bg-white text-[#696969] hover:border-[#3860BE]/40 hover:text-[#141413]"
+                      ? "border-[#3860BE] bg-[#3860BE] text-white shadow-[0_8px_22px_rgba(56,96,190,0.22)]"
+                      : "border-[#3860BE]/20 bg-[#3860BE]/6 text-[#31518F] hover:border-[#3860BE]/40 hover:bg-[#3860BE]/12"
                   }`}
                 >
                   {option.lokasi}
@@ -373,27 +375,27 @@ export function CommuterOptionsCard({
               return (
                 <div
                   key={option.lokasi}
-                  className="overflow-hidden rounded-[20px] border border-[#E5E2E0] bg-[#FCFBFA]"
+                  className="overflow-hidden rounded-[18px] border border-[#E5E2E0] bg-[#FCFBFA]"
                 >
-                  <div className="grid gap-4 p-5 lg:grid-cols-[1fr_260px]">
-                    <div>
+                  <div className="grid gap-3 p-4 lg:grid-cols-[minmax(0,1fr)_280px]">
+                    <div className="min-w-0">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div>
-                          <h4 className="text-sm font-extrabold text-[#696969] uppercase tracking-wider">
+                          <h4 className="text-[11px] font-bold uppercase tracking-[0.04em] text-[#696969]">
                             Kost di {option.lokasi}
                           </h4>
                           <div
-                            className={`mt-2 text-xl font-bold ${option.savings >= 0 ? "text-[#10b981]" : "text-[#dc2626]"}`}
+                            className={`mt-1 text-lg font-bold ${option.savings >= 0 ? "text-[#10b981]" : "text-[#dc2626]"}`}
                           >
                             {formatSavings(option.savings)}
                           </div>
                         </div>
-                        <span className="rounded-full border border-[#141413]/10 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-[0.04em] text-[#696969]">
+                        <span className="rounded-full border border-[#141413]/10 bg-white px-2.5 py-1 text-[11px] font-semibold text-[#696969]">
                           Ke {targetLocation.Lokasi_Clean}
                         </span>
                       </div>
 
-                      <div className="mt-4 grid gap-2">
+                      <div className="mt-3 overflow-hidden rounded-[14px] border border-[#E5E2E0] bg-white">
                         {routes.map(({ mode, route, fallbackRoute }) => {
                           const modeConfig = getModeConfig(mode);
                           const activeRoute = route ?? fallbackRoute;
@@ -406,32 +408,31 @@ export function CommuterOptionsCard({
                           return (
                             <div
                               key={mode}
-                              className="grid gap-2 rounded-[16px] border border-[#E5E2E0] bg-white p-3.5 sm:grid-cols-[112px_1fr_auto] sm:items-center"
+                              className="grid gap-2 border-b border-[#E5E2E0] px-3 py-2.5 last:border-b-0 sm:grid-cols-[88px_minmax(0,1fr)_auto] sm:items-center"
                             >
-                              <div className="flex items-center gap-2 text-sm font-bold text-[#141413]">
+                              <div className="flex items-center gap-2 text-xs font-bold text-[#141413]">
                                 <span
-                                  className="h-2.5 w-2.5 rounded-full"
+                                  className="h-2 w-2 rounded-full"
                                   style={{ backgroundColor: modeConfig.color }}
                                 />
                                 {modeConfig.label}
                               </div>
-                              <div className="flex flex-wrap gap-2">
-                                <span className="rounded-full bg-[#141413]/5 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.04em] text-[#696969]">
-                                  {activeRoute.distance.toFixed(1)} KM
-                                </span>
-                                <span className="rounded-full bg-[#141413]/5 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.04em] text-[#696969]">
-                                  ~{activeRoute.duration} mnt
-                                </span>
-                                <span className="rounded-full bg-[#3860BE]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.04em] text-[#3860BE]">
-                                  {isLoading
-                                    ? "Memuat rute..."
-                                    : activeRoute.source === "osrm"
-                                      ? "OSRM"
-                                      : "Fallback"}
-                                </span>
+                              <div className="flex flex-wrap gap-1.5">
+                                <MetricPill
+                                  label="Jarak"
+                                  value={`${activeRoute.distance.toFixed(1)} KM`}
+                                />
+                                <MetricPill
+                                  label="Waktu"
+                                  value={
+                                    isLoading
+                                      ? "Memuat"
+                                      : `~${activeRoute.duration} mnt`
+                                  }
+                                />
                               </div>
                               <span
-                                className={`inline-flex w-fit rounded-full border px-3 py-1.5 text-xs font-bold uppercase tracking-[0.04em] ${status.className}`}
+                                className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[11px] font-semibold ${status.className}`}
                               >
                                 {status.label}
                               </span>
@@ -455,9 +456,9 @@ export function CommuterOptionsCard({
             })}
           </div>
         ) : (
-          <div className="rounded-[20px] border border-dashed border-[#D1CDC7] bg-[#FCFBFA] px-4 py-6 text-center text-sm leading-6 text-[#696969]">
-            Pilih satu atau lebih kota komuter untuk melihat estimasi jarak,
-            waktu tempuh, status kelayakan, dan rute pada peta.
+          <div className="rounded-[18px] border border-dashed border-[#D1CDC7] bg-[#FCFBFA] px-4 py-4 text-center text-xs leading-5 text-[#696969]">
+            Pilih kota asal untuk melihat estimasi jarak, waktu tempuh, status,
+            dan rute.
           </div>
         )}
       </div>
@@ -481,7 +482,7 @@ function CommuterRouteMap({
   const fitPositions = routes.flatMap((item) => item.route.coordinates);
 
   return (
-    <div className="h-[250px] min-h-[250px] overflow-hidden rounded-[18px] border border-[#E5E2E0] bg-white">
+    <div className="relative h-[200px] min-h-[200px] overflow-hidden rounded-[18px] border border-[#E5E2E0] bg-white sm:h-[220px] sm:min-h-[220px]">
       <MapContainer
         center={center}
         zoom={10}
@@ -500,7 +501,7 @@ function CommuterRouteMap({
           const modeConfig = getModeConfig(mode);
           const pathOptions: PathOptions = {
             color: modeConfig.color,
-            weight: mode === "motor" ? 3 : 4,
+            weight: mode === "car" ? 4 : 3.5,
             opacity: 0.82,
             dashArray: mode === "motor" ? "7 6" : undefined,
           };
@@ -554,6 +555,26 @@ function CommuterRouteMap({
           </Tooltip>
         </CircleMarker>
       </MapContainer>
+      <div className="pointer-events-none absolute left-3 top-3 z-[500] flex gap-1.5 rounded-full border border-[#E5E2E0] bg-white/95 px-2.5 py-1.5 text-[10px] font-bold text-[#555555] shadow-sm backdrop-blur">
+        {MODES.map((mode) => (
+          <span key={mode.key} className="inline-flex items-center gap-1.5">
+            <span
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ backgroundColor: mode.color }}
+            />
+            {mode.label}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MetricPill({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="inline-flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[11px] shadow-[inset_0_0_0_1px_rgba(20,20,19,0.06)]">
+      <span className="font-semibold text-[#A0A09A]">{label}</span>
+      <span className="font-bold text-[#141413]">{value}</span>
     </div>
   );
 }

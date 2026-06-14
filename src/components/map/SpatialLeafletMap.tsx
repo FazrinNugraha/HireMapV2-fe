@@ -21,7 +21,7 @@ export function SpatialLeafletMap({
   const selectedItem = data.find((item) => item.Lokasi_Clean === selectedLocation)
 
   return (
-    <div className="relative h-[560px] overflow-hidden rounded-[32px] border border-[#E5E2E0] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+    <div className="relative h-[360px] overflow-hidden rounded-[24px] border border-[#E5E2E0] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)] sm:h-[440px] md:rounded-[32px] lg:h-[560px]">
       <MapContainer
         center={JABODETABEK_CENTER}
         zoom={10}
@@ -72,7 +72,7 @@ export function SpatialLeafletMap({
       </MapContainer>
 
       {/* Legend */}
-      <div className="absolute bottom-5 left-5 z-[500] overflow-hidden rounded-[20px] border border-[#E5E2E0] bg-white/95 p-4 text-xs shadow-sm backdrop-blur-sm">
+      <div className="absolute bottom-3 left-3 z-[500] max-w-[calc(100%-1.5rem)] overflow-hidden rounded-[18px] border border-[#E5E2E0] bg-white/95 p-3 text-[11px] shadow-sm backdrop-blur-sm sm:bottom-5 sm:left-5 sm:rounded-[20px] sm:p-4 sm:text-xs">
         <h4 className="mb-2 font-bold uppercase tracking-[0.04em] text-[#696969]">
           Job Opportunity
         </h4>
@@ -109,7 +109,7 @@ function LegendItem({ color, label }: { color: string; label: string }) {
   )
 }
 
-/* ─── Score helpers ─────────────────────────────────── */
+/* Score helpers */
 
 function getSpatialStats(data: SpatialSummaryItem[]) {
   const jobs = data.map((item) => item.Jumlah_Lowongan).filter((j) => j > 0)
@@ -137,9 +137,9 @@ function getSweetSpotScore(
 }
 
 function getSweetSpotColor(score: number): string {
-  if (score >= 0.70) return '#10b981'  // green — high opportunity
-  if (score >= 0.35) return '#f59e0b'  // yellow — moderate
-  return '#ef4444'                     // red — low opportunity
+  if (score >= 0.70) return '#10b981'
+  if (score >= 0.35) return '#f59e0b'
+  return '#ef4444'
 }
 
 function getSweetSpotLabel(score: number): string {

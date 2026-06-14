@@ -40,7 +40,7 @@ export function SalaryPage({
   }, [prediction]);
 
   return (
-    <main className="mx-auto grid w-full max-w-[1280px] grid-cols-1 gap-8 px-5 py-10 md:px-10 lg:grid-cols-12">
+    <main className="page-shell grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-12">
       <SalaryHeader />
 
       <section className="col-span-1 flex flex-col lg:col-span-5">
@@ -72,10 +72,10 @@ function SalaryHeader() {
   return (
     <header className="col-span-1 lg:col-span-12">
       <p className="eyebrow">Interactive Calculator</p>
-      <h1 className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-[#141413] md:text-5xl">
+      <h1 className="page-title mt-2">
         Salary Predictor &amp; Decision Support System
       </h1>
-      <p className="mt-3 text-lg leading-8 text-[#696969]">
+      <p className="page-description">
         Hitung estimasi gaji pasar yang kompetitif dan dapatkan rekomendasi
         keputusan karir &amp; finansial di Jabodetabek.
       </p>
@@ -86,7 +86,7 @@ function SalaryHeader() {
 // State saat request prediksi sedang diproses oleh backend.
 function SalaryLoadingState() {
   return (
-    <div className="flex min-h-[420px] flex-1 flex-col items-center justify-center rounded-[32px] border border-[#E5E2E0] bg-white p-10 text-center shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+    <div className="flex min-h-[320px] flex-1 flex-col items-center justify-center rounded-[24px] border border-[#E5E2E0] bg-white p-6 text-center shadow-[0_8px_30px_rgba(0,0,0,0.06)] md:min-h-[420px] md:rounded-[32px] md:p-10">
       <div className="relative flex items-center justify-center">
         <span className="absolute inline-flex h-16 w-16 animate-ping rounded-full bg-[#3860BE]/10 opacity-75" />
         <span className="relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#3860BE]/10 text-[#3860BE]">
@@ -107,7 +107,7 @@ function SalaryLoadingState() {
           </svg>
         </span>
       </div>
-      <h3 className="mt-6 text-lg font-bold text-[#141413]">
+      <h3 className="mt-6 text-base font-bold text-[#141413] md:text-lg">
         Memproses Analisis Keputusan...
       </h3>
       <p className="mt-2 max-w-sm text-xs leading-5 text-[#696969]">
@@ -141,7 +141,7 @@ function SalaryResultPanel({
 // State awal sebelum user menjalankan prediksi.
 function SalaryEmptyState() {
   return (
-    <div className="flex h-full min-h-[420px] flex-col items-center justify-center rounded-[32px] border-2 border-dashed border-[#D1CDC7] bg-[#FCFBFA]/50 p-10 text-center">
+    <div className="flex h-full min-h-[320px] flex-col items-center justify-center rounded-[24px] border-2 border-dashed border-[#D1CDC7] bg-[#FCFBFA]/50 p-6 text-center md:min-h-[420px] md:rounded-[32px] md:p-10">
       <div className="mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-[#EFEEE7] text-[#696969]">
         <svg
           className="h-8 w-8 text-[#696969]"

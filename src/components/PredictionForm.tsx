@@ -118,12 +118,12 @@ export function PredictionForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col rounded-[32px] border border-[#E5E2E0] bg-white p-8 shadow-[0_8px_30px_rgba(0,0,0,0.06)] lg:h-full lg:justify-between"
+      className="flex flex-col rounded-[24px] border border-[#E5E2E0] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.06)] sm:p-6 md:rounded-[32px] md:p-8 lg:h-full lg:justify-between"
     >
       <div>
         <div className="mb-6">
           <p className="eyebrow">PREDICTION INPUT</p>
-          <h2 className="mt-2 text-3xl font-semibold tracking-[-0.02em] text-[#141413]">
+          <h2 className="mt-2 text-2xl font-semibold tracking-[-0.02em] text-[#141413] md:text-3xl">
             Faktor utama
           </h2>
         </div>
@@ -150,7 +150,7 @@ export function PredictionForm({
           </label>
 
           {/* Kategori & Lokasi */}
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2">
             <SelectField
               label="Kategori pekerjaan"
               value={form.category}
@@ -170,7 +170,7 @@ export function PredictionForm({
           </div>
 
           {/* Pengalaman & Pendidikan */}
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2">
             <SelectField
               label="Level pengalaman"
               value={form.experience_level}

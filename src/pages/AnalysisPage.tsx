@@ -47,7 +47,7 @@ export function AnalysisPage({
   };
 
   return (
-    <main className="mx-auto w-full max-w-[1280px] px-5 py-10 md:px-10">
+    <main className="page-shell">
       <AnalysisHeader />
 
       {!prediction ? (
@@ -77,10 +77,10 @@ function AnalysisHeader() {
   return (
     <header className="mb-10">
       <p className="eyebrow">Decision Support System</p>
-      <h1 className="mt-2 text-4xl font-semibold tracking-[-0.02em] text-[#141413] md:text-5xl">
+      <h1 className="page-title mt-2">
         Analisis Karir &amp; Kelayakan
       </h1>
-      <p className="mt-3 text-lg leading-8 text-[#696969]">
+      <p className="page-description">
         Indeks kelayakan berbasis data riil: rasio hunian, kualifikasi profil,
         dan kepadatan pasar kerja Jabodetabek.
       </p>
@@ -91,7 +91,7 @@ function AnalysisHeader() {
 // Empty state saat user belum punya hasil Salary Prediction.
 function AnalysisEmptyState({ onGoToSalary }: { onGoToSalary: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-[32px] border-2 border-dashed border-[#D1CDC7] bg-[#FCFBFA]/50 p-16 text-center">
+    <div className="flex flex-col items-center justify-center rounded-[24px] border-2 border-dashed border-[#D1CDC7] bg-[#FCFBFA]/50 p-8 text-center md:rounded-[32px] md:p-16">
       <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFEEE7] text-2xl font-bold text-[#696969]">
         %
       </span>
@@ -143,7 +143,7 @@ function CareerJourneyGate({
   onShowCareerChart: () => void;
 }) {
   return (
-    <div className="flex flex-col items-center gap-6 rounded-[32px] border border-dashed border-[#E5E2E0] bg-[#FCFBFA] px-10 py-8 shadow-[0_4px_20px_rgba(0,0,0,0.04)] sm:flex-row sm:items-center sm:gap-8 sm:text-left">
+    <div className="flex flex-col items-center gap-5 rounded-[24px] border border-dashed border-[#E5E2E0] bg-[#FCFBFA] px-5 py-7 text-center shadow-[0_4px_20px_rgba(0,0,0,0.04)] sm:flex-row sm:items-center sm:gap-8 sm:px-10 sm:py-8 sm:text-left md:rounded-[32px]">
       <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#EFEEE7]">
         <svg
           className="h-7 w-7 text-[#141413]"
@@ -163,7 +163,7 @@ function CareerJourneyGate({
           <span className="text-lg leading-none text-[#F37338]">*</span>
           Career Journey
         </p>
-        <h3 className="mt-1.5 text-xl font-bold tracking-[-0.02em] text-[#141413]">
+        <h3 className="mt-1.5 text-lg font-bold tracking-[-0.02em] text-[#141413] md:text-xl">
           Proyeksi Karir &amp; Pertumbuhan Gaji
         </h3>
         <p className="mt-2 text-base leading-7 text-[#696969]">
@@ -174,7 +174,7 @@ function CareerJourneyGate({
       <button
         type="button"
         onClick={onShowCareerChart}
-        className="inline-flex shrink-0 items-center gap-2.5 rounded-full bg-[#141413] px-7 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#AA3700] hover:scale-[1.03] active:scale-[0.98]"
+        className="inline-flex w-full shrink-0 items-center justify-center gap-2.5 rounded-full bg-[#141413] px-7 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#AA3700] active:scale-[0.98] sm:w-auto sm:hover:scale-[1.03]"
       >
         <svg
           className="h-4 w-4"
@@ -196,7 +196,7 @@ function CareerJourneyGate({
 // Loading lokal saat sistem menyiapkan chart perjalanan karir.
 function CareerJourneyLoading() {
   return (
-    <div className="flex flex-col items-center gap-6 rounded-[32px] border border-[#E5E2E0] bg-white px-10 py-8 shadow-[0_4px_20px_rgba(0,0,0,0.06)] sm:flex-row sm:items-center sm:gap-8 sm:text-left">
+    <div className="flex flex-col items-center gap-5 rounded-[24px] border border-[#E5E2E0] bg-white px-5 py-7 text-center shadow-[0_4px_20px_rgba(0,0,0,0.06)] sm:flex-row sm:items-center sm:gap-8 sm:px-10 sm:py-8 sm:text-left md:rounded-[32px]">
       <div className="relative flex shrink-0 items-center justify-center">
         <span className="absolute inline-flex h-16 w-16 animate-ping rounded-full bg-[#F37338]/10 opacity-75" />
         <span className="relative inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#EFEEE7] text-[#141413]">

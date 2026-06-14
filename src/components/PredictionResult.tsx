@@ -77,7 +77,7 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
   };
 
   return (
-    <section className="flex h-full w-full flex-col justify-between rounded-[32px] border border-[#E5E2E0] bg-white p-7 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+    <section className="flex h-full w-full flex-col justify-between rounded-[24px] border border-[#E5E2E0] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.06)] md:rounded-[32px] md:p-7">
       <div>
         <FeatureHeader
           title="Salary Estimate"
@@ -95,9 +95,9 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
           className="mb-4"
         />
 
-        <div className="mt-4 flex items-center justify-between gap-4">
+        <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0 flex-1">
-            <h3 className="text-3xl font-semibold tracking-[-0.02em] text-[#141413]">
+            <h3 className="text-2xl font-semibold tracking-[-0.02em] text-[#141413] md:text-3xl">
               {formatRupiah(prediction.gaji_prediksi)}
             </h3>
             <p className="mt-2 text-sm leading-6 text-[#696969]">
@@ -105,7 +105,7 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
             </p>
           </div>
 
-          <div className="relative flex h-20 w-20 shrink-0 items-center justify-center">
+          <div className="relative flex h-20 w-20 shrink-0 items-center justify-center self-start sm:self-center">
             <Doughnut data={chartData} options={chartOptions} />
             <div className="pointer-events-none absolute flex flex-col items-center justify-center text-center">
               <span className="text-sm font-bold leading-none text-[#141413]">

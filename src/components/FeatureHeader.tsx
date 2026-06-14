@@ -9,7 +9,7 @@ type FeatureHeaderProps = {
 
 /**
  * Header standar untuk kartu fitur DSS.
- * Dipakai agar judul, aksen titik, deskripsi, dan action badge konsisten di semua card.
+ * Dipakai agar judul, aksen, deskripsi, dan action badge konsisten di semua card.
  */
 export function FeatureHeader({
   title,
@@ -23,7 +23,7 @@ export function FeatureHeader({
     >
       <div className="min-w-0 flex-1">
         <p className="flex items-center gap-2 text-base font-extrabold text-[#141413] md:text-lg">
-          <span className="text-lg leading-none text-[#F37338]">•</span>
+          <span className="text-lg leading-none text-[#F37338]">*</span>
           {title}
         </p>
         {description && (

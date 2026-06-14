@@ -35,7 +35,7 @@ type FeasibilityScoreCardProps = {
 type ScoreDimension = {
   label: string;
   weight: number;
-  rawScore: number; // 0–100
+  rawScore: number; // 0-100
   weightedScore: number;
   description: string;
   statusColor: string;
@@ -98,7 +98,7 @@ function getScoreGrade(score: number): {
       color: "#dc2626",
       bg: "#fee2e2",
       description:
-        "Kondisi kurang ideal — pertimbangkan jarak commute harian atau penawaran gaji.",
+        "Kondisi kurang ideal - pertimbangkan jarak commute harian atau penawaran gaji.",
     };
   return {
     label: "Berisiko Tinggi",
@@ -122,12 +122,12 @@ function buildAuditPrompt(
     `Indeks Kelayakan DSS saya adalah ${score}/100. ` +
     `Gaji prediksi: ${formatRupiah(prediction.gaji_prediksi)}/bln, ` +
     `estimasi kos: ${formatRupiah(prediction.estimasi_kos)}/bln (rasio ${prediction.rasio_kos.toFixed(1)}%), ` +
-    `multiplier kualifikasi: ${prediction.multiplier}×. ` +
+    `multiplier kualifikasi: ${prediction.multiplier}x. ` +
     `Saya berdomisili di ${domicile} dengan perkiraan jarak commute harian ${distance} KM. ` +
     `Berikan analisis mendalam tentang: (1) kelayakan transportasi, commute, dan opsi kos/tinggal, ` +
     `(2) rekomendasi peningkatan kualifikasi profil, ` +
     `(3) strategi negosiasi gaji berdasarkan tingkat kepercayaan model (${prediction.confidence_label}), dan ` +
-    `(4) langkah konkret mitigasi risiko dalam 6–12 bulan.`
+    `(4) langkah konkret mitigasi risiko dalam 6-12 bulan.`
   );
 }
 
@@ -220,7 +220,7 @@ export function FeasibilityScoreCard({
         weight: 30,
         rawScore: competeScore,
         weightedScore: Math.round((competeScore * 30) / 100),
-        description: `Multiplier kualifikasi Anda: ${mult.toFixed(2)}× (berdasarkan pendidikan, pengalaman, & sertifikasi).`,
+        description: `Multiplier kualifikasi Anda: ${mult.toFixed(2)}x (berdasarkan pendidikan, pengalaman, & sertifikasi).`,
         statusColor:
           competeScore >= 70
             ? "#16a34a"
@@ -297,9 +297,9 @@ export function FeasibilityScoreCard({
   };
 
   return (
-    <div className="overflow-hidden rounded-[32px] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
+    <div className="overflow-hidden rounded-[24px] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.06)] md:rounded-[32px]">
       {/* Header band */}
-      <div className="border-b border-[#E4E2DC] px-7 pt-7 pb-6">
+      <div className="border-b border-[#E4E2DC] px-5 pb-5 pt-5 md:px-7 md:pb-6 md:pt-7">
         <FeatureHeader title="Indeks Kelayakan DSS" />
         <h3 className="mt-2 text-xl font-semibold tracking-[-0.02em] text-[#141413]">
           Decision Support Score
@@ -310,12 +310,12 @@ export function FeasibilityScoreCard({
         </p>
       </div>
 
-      <div className="p-7">
+      <div className="p-5 md:p-7">
         {/* Score + Donut row */}
-        <div className="flex items-center gap-8 border-b border-[#E4E2DC] pb-6">
+        <div className="flex flex-col gap-5 border-b border-[#E4E2DC] pb-6 sm:flex-row sm:items-center sm:gap-8">
           {/* Chart.js Doughnut */}
           <div
-            className="relative shrink-0"
+            className="relative shrink-0 self-center sm:self-auto"
             style={{ width: 110, height: 110 }}
           >
             <Doughnut data={donutData} options={donutOptions} />
@@ -349,9 +349,9 @@ export function FeasibilityScoreCard({
             <button
               type="button"
               onClick={() => onRequestAudit(auditPrompt)}
-              className="mt-4 flex items-center gap-2 rounded-full bg-[#141413] px-5 py-2.5 text-xs font-bold text-white transition-all hover:bg-[#AA3700] active:scale-95 cursor-pointer"
+              className="mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#141413] px-5 py-2.5 text-xs font-bold text-white transition-all hover:bg-[#AA3700] active:scale-95 sm:w-auto"
             >
-              <span>🔍</span>
+              <span>AI</span>
               <span>Minta Audit Detail dari AI</span>
             </button>
           </div>
@@ -360,18 +360,18 @@ export function FeasibilityScoreCard({
         {/* Input panel untuk pemilihan domisili (Commute parameter control) */}
         <div className="mt-6">
           <div className="flex flex-col gap-2 rounded-2xl bg-[#F9F8F6] p-4 border border-[#E4E2DC] transition-all hover:border-[#A0A09A]">
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <label
                 htmlFor="domicile-select"
                 className="text-xs font-bold uppercase tracking-wider text-[#696969]"
               >
-                📍 Domisili Anda (Asal)
+                Domisili Anda (Asal)
               </label>
               <select
                 id="domicile-select"
                 value={domicile}
                 onChange={(e) => setDomicile(e.target.value)}
-                className="rounded-full border border-[#E5E2E0] bg-white px-3 py-1.5 text-xs font-semibold text-[#141413] shadow-sm outline-none focus:border-[#141413] transition-colors cursor-pointer"
+                className="w-full cursor-pointer rounded-full border border-[#E5E2E0] bg-white px-3 py-2 text-xs font-semibold text-[#141413] shadow-sm outline-none transition-colors focus:border-[#141413] sm:w-auto"
               >
                 {spatialSummary.map((item) => (
                   <option key={item.Lokasi_Clean} value={item.Lokasi_Clean}>
@@ -445,7 +445,7 @@ export function FeasibilityScoreCard({
                     </h4>
                     <div className="flex items-center gap-1.5 mt-0.5 text-[10px] font-semibold text-[#696969]">
                       <span>bobot {dim.weight}%</span>
-                      <span>•</span>
+                      <span>*</span>
                       <span>+{dim.weightedScore} DSS</span>
                     </div>
                   </div>

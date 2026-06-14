@@ -46,8 +46,8 @@ function buildJourneySteps(
   };
   const META = [
     { key: "fresh", label: "Entry-Level", sublabel: "< 1 tahun" },
-    { key: "junior", label: "Junior", sublabel: "1–3 tahun" },
-    { key: "mid", label: "Mid-Level", sublabel: "3–7 tahun" },
+    { key: "junior", label: "Junior", sublabel: "1-3 tahun" },
+    { key: "mid", label: "Mid-Level", sublabel: "3-7 tahun" },
     { key: "senior", label: "Senior", sublabel: "7+ tahun" },
   ];
 
@@ -93,7 +93,7 @@ function buildJourneySteps(
   });
 }
 
-// ── Design tokens ──────────────────────────────────────────────────────────
+// Design tokens
 const INK = "#141413";
 const ORANGE = "#F37338";
 const GRID_COLOR = "rgba(0,0,0,0.06)";
@@ -114,13 +114,13 @@ export function CareerJourneyChart({
   const minSalary = Math.min(...salaries);
   const pad = (maxSalary - minSalary) * 0.45;
 
-  // Total salary growth fresh → senior
+  // Total salary growth from fresh graduate to senior level.
   const totalGrowth = (
     ((steps[3].salary - steps[0].salary) / steps[0].salary) *
     100
   ).toFixed(1);
 
-  // ── Chart.js data ───────────────────────────────────────────────────────
+  // Chart.js data
   const pointBg = steps.map((s) => (s.isActive ? ORANGE : "white"));
   const pointBorder = steps.map((s) => (s.isActive ? ORANGE : "#B0ADA7"));
   const pointR = steps.map((s) => (s.isActive ? 9 : 5));
@@ -234,13 +234,13 @@ export function CareerJourneyChart({
   };
 
   return (
-    <div className="overflow-hidden rounded-[32px] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
+    <div className="overflow-hidden rounded-[24px] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.06)] md:rounded-[32px]">
       {/* ── KPI pill row (like the reference) ──────────────────────── */}
-      <div className="border-b border-[#E4E2DC] px-8 pt-7 pb-5">
+      <div className="border-b border-[#E4E2DC] px-5 pb-5 pt-5 md:px-8 md:pb-5 md:pt-7">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <FeatureHeader title="Career Journey" />
-            <h3 className="mt-1.5 text-2xl font-bold tracking-[-0.02em] text-[#141413]">
+            <h3 className="mt-1.5 text-xl font-bold tracking-[-0.02em] text-[#141413] md:text-2xl">
               Proyeksi Perjalanan Karir
             </h3>
           </div>
@@ -255,11 +255,11 @@ export function CareerJourneyChart({
         </div>
 
         {/* 4 KPI mini-cards */}
-        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((step) => (
             <div
               key={step.key}
-              className={`flex flex-col gap-1 rounded-[20px] border px-5 py-4 transition-all ${
+              className={`flex min-w-0 flex-col gap-1 rounded-[18px] border px-4 py-4 transition-all md:rounded-[20px] md:px-5 ${
                 step.isActive
                   ? "border-[#F37338]/30 bg-[#FFF4EE] shadow-[0_0_0_1.5px_#F37338]"
                   : "border-[#E4E2DC] bg-white hover:bg-[#FAFAF8]"
@@ -274,7 +274,7 @@ export function CareerJourneyChart({
                 )}
               </span>
               <div className="flex items-baseline gap-2">
-                <span className="text-lg font-bold tracking-tight text-[#141413]">
+                <span className="min-w-0 break-words text-base font-bold tracking-tight text-[#141413] md:text-lg">
                   {formatRupiah(step.salary)}
                 </span>
                 {step.growthPct !== null && (
@@ -292,19 +292,19 @@ export function CareerJourneyChart({
       </div>
 
       {/* ── Chart area ──────────────────────────────────────────────── */}
-      <div className="px-6 pb-6 pt-5 bg-white">
+      <div className="bg-white px-5 pb-5 pt-5 md:px-6 md:pb-6">
         {/* Subtitle row */}
         <p className="mb-4 text-base leading-7 text-[#696969]">
           Estimasi gaji{" "}
           <strong className="text-[#141413]">{prediction.judul}</strong> di{" "}
-          <strong className="text-[#141413]">{prediction.lokasi}</strong> —
+          <strong className="text-[#141413]">{prediction.lokasi}</strong> -
           potensi kenaikan total{" "}
           <strong className="text-[#F37338]">+{totalGrowth}%</strong> dari
           Entry-Level ke Senior.
         </p>
 
         {/* Chart.js Line */}
-        <div style={{ height: "240px" }}>
+        <div className="h-[220px] sm:h-[240px]">
           <Line data={chartData} options={chartOptions} />
         </div>
       </div>

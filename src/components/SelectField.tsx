@@ -69,7 +69,7 @@ export function SelectField({
               ? `w-full text-left rounded-[20px] border border-[#E5E2E0] bg-[#FCFBFA] py-3 pr-10 text-sm text-[#141413] outline-none transition-all hover:border-[#C7C7C0] focus:border-[#141413] focus:bg-white focus:ring-4 focus:ring-[#141413]/5 flex items-center justify-between gap-2 min-w-0 ${
                   icon ? "pl-11" : "pl-4"
                 } ${isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`
-              : `cursor-pointer rounded-full bg-transparent px-4 py-2 text-sm font-semibold text-[#141413] flex items-center gap-1.5 hover:bg-[#EFEEE7]/60 transition-colors ${
+              : `cursor-pointer rounded-full bg-transparent px-3 py-2 text-sm font-semibold text-[#141413] flex items-center justify-between gap-1.5 hover:bg-[#EFEEE7]/60 transition-colors sm:px-4 ${
                   isDisabled ? "cursor-not-allowed opacity-50" : ""
                 }`
           }
@@ -108,7 +108,7 @@ export function SelectField({
         {isOpen && (
           <div
             className={`absolute z-[2000] mt-1.5 max-h-60 overflow-y-auto rounded-[24px] border border-[#E5E2E0] bg-white p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.08)] animate-fade-slide-down ${
-              variant === "form" ? "w-full left-0" : "right-0 min-w-[220px]"
+              variant === "form" ? "w-full left-0" : "left-0 right-0 min-w-full sm:left-auto sm:min-w-[220px]"
             }`}
           >
             {options.map((option) => {

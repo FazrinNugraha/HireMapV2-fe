@@ -12,7 +12,7 @@ type AppShellProps = {
 // Kerangka global aplikasi: navbar atas, konten halaman aktif, lalu footer.
 export function AppShell({ activeLayer, children, onLayerChange }: AppShellProps) {
   return (
-    <div className="min-h-screen bg-[#fbf9f3] pt-24 text-[#1b1c18]">
+    <div className="min-h-screen bg-[#fbf9f3] pt-32 text-[#1b1c18] md:pt-24">
       <AppTabs activeLayer={activeLayer} onChange={onLayerChange} />
       {children}
       <AppFooter />

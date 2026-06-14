@@ -29,9 +29,9 @@ export function AiConsultantCard({
   onSubmit,
 }: AiConsultantCardProps) {
   return (
-    <section className="flex h-full min-h-[700px] min-w-0 flex-col overflow-hidden rounded-[32px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)] md:col-span-8">
+    <section className="flex h-full min-h-[560px] min-w-0 flex-col overflow-hidden rounded-[24px] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)] md:col-span-8 md:min-h-[700px] md:rounded-[32px]">
       {/* Header */}
-      <div className="border-b border-[#E4E2DC] bg-white p-6 md:p-7">
+      <div className="border-b border-[#E4E2DC] bg-white p-5 md:p-7">
         <FeatureHeader
           title="AI Career Consultant"
           description="Tanyakan soal negosiasi, strategi interview, skill growth, atau keputusan hunian."
@@ -53,7 +53,7 @@ export function AiConsultantCard({
       </div>
 
       {/* Chat body */}
-      <div className="flex flex-1 flex-col gap-5 overflow-y-auto bg-[#FCFBFA] p-6">
+      <div className="flex flex-1 flex-col gap-5 overflow-y-auto bg-[#FCFBFA] p-4 md:p-6">
         {chatHistory.length === 0 ? (
           <WelcomeMessage hasPredictionContext={hasPredictionContext} />
         ) : (
@@ -66,7 +66,7 @@ export function AiConsultantCard({
 
       {/* Input */}
       <form
-        className="border-t border-[#E4E2DC] bg-white p-5"
+        className="border-t border-[#E4E2DC] bg-white p-3 md:p-5"
         onSubmit={onSubmit}
         ref={formRef}
       >
@@ -135,7 +135,7 @@ function WelcomeMessage({
   hasPredictionContext: boolean;
 }) {
   return (
-    <div className="flex max-w-[85%] gap-3">
+    <div className="flex max-w-[96%] gap-3 sm:max-w-[85%]">
       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#141413] text-white">
         {IconConsultant}
       </div>
@@ -150,7 +150,7 @@ function WelcomeMessage({
 
 function TypingIndicator() {
   return (
-    <div className="flex max-w-[85%] gap-3">
+    <div className="flex max-w-[96%] gap-3 sm:max-w-[85%]">
       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#141413] text-white">
         {IconConsultant}
       </div>
@@ -177,7 +177,7 @@ function ChatBubble({ message }: { message: ChatMessage }) {
 
   return (
     <div
-      className={`flex max-w-[85%] gap-3 ${isUser ? "self-end flex-row-reverse" : ""}`}
+      className={`flex max-w-[96%] gap-3 sm:max-w-[85%] ${isUser ? "self-end flex-row-reverse" : ""}`}
     >
       <div
         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${

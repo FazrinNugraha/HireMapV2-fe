@@ -78,7 +78,7 @@ export function HousingAffordabilityCard({
   };
 
   return (
-    <section className="flex h-full w-full flex-col justify-between rounded-[32px] border border-[#E5E2E0] bg-white p-7 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+    <section className="flex h-full w-full flex-col justify-between rounded-[24px] border border-[#E5E2E0] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.06)] md:rounded-[32px] md:p-7">
       <div>
         <FeatureHeader
           title="Housing Affordability"
@@ -93,12 +93,12 @@ export function HousingAffordabilityCard({
           className="mb-4"
         />
 
-        <div className="mt-4 flex items-center justify-between gap-4">
+        <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex-1">
             <div className="text-sm leading-6 text-[#696969]">
               Est. Kos di {prediction.lokasi}
             </div>
-            <div className="mt-1 text-2.5xl font-semibold tracking-[-0.02em] text-[#141413] md:text-3xl">
+            <div className="mt-1 text-2xl font-semibold tracking-[-0.02em] text-[#141413] md:text-3xl">
               {formatRupiah(prediction.estimasi_kos)}
             </div>
             <div className="mt-0.5 text-sm font-normal text-[#696969]">
@@ -110,7 +110,7 @@ export function HousingAffordabilityCard({
             </p>
           </div>
 
-          <div className="relative flex items-center justify-center shrink-0 w-20 h-20">
+          <div className="relative flex h-20 w-20 shrink-0 items-center justify-center self-start sm:self-center">
             <Doughnut data={chartData} options={chartOptions} />
             <div className="absolute flex flex-col items-center justify-center text-center pointer-events-none">
               <span className="text-sm font-bold text-[#141413] leading-none">
