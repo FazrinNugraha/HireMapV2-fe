@@ -65,7 +65,7 @@ export function PredictionForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-[32px] bg-white p-8 shadow-[0_8px_30px_rgba(0,0,0,0.06)] border border-[#E5E2E0] h-full flex flex-col justify-between"
+      className="flex flex-col rounded-[32px] border border-[#E5E2E0] bg-white p-8 shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
     >
       <div>
         <div className="mb-6">
@@ -161,6 +161,5 @@ export function PredictionForm({
     </form>
   )
 }
-
 
 

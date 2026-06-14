@@ -70,8 +70,6 @@ function buildJourneySteps(prediction: SalaryPredictionResponse): JourneyStep[] 
 // ── Design tokens ──────────────────────────────────────────────────────────
 const INK         = '#141413'
 const ORANGE      = '#F37338'
-const BLUE        = '#3860BE'
-const CREAM       = '#F3F0EE'
 const GRID_COLOR  = 'rgba(0,0,0,0.06)'
 
 export function CareerJourneyChart({ prediction }: { prediction: SalaryPredictionResponse }) {
@@ -190,8 +188,11 @@ export function CareerJourneyChart({ prediction }: { prediction: SalaryPredictio
         <div className="flex flex-wrap items-center justify-between gap-3">
           {/* Title */}
           <div>
-            <p className="eyebrow">Career Journey</p>
-            <h3 className="mt-1 text-xl font-semibold tracking-[-0.02em] text-[#141413]">
+            <p className="flex items-center gap-2 text-base font-extrabold text-[#141413] md:text-lg">
+              <span className="text-lg leading-none text-[#F37338]">•</span>
+              Career Journey
+            </p>
+            <h3 className="mt-1.5 text-2xl font-bold tracking-[-0.02em] text-[#141413]">
               Proyeksi Perjalanan Karir
             </h3>
           </div>
@@ -241,7 +242,7 @@ export function CareerJourneyChart({ prediction }: { prediction: SalaryPredictio
       {/* ── Chart area ──────────────────────────────────────────────── */}
       <div className="px-6 pb-6 pt-5 bg-white">
         {/* Subtitle row */}
-        <p className="mb-4 text-sm text-[#696969]">
+        <p className="mb-4 text-base leading-7 text-[#696969]">
           Estimasi gaji{' '}
           <strong className="text-[#141413]">{prediction.judul}</strong> di{' '}
           <strong className="text-[#141413]">{prediction.lokasi}</strong> —

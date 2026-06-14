@@ -1,7 +1,7 @@
 import { formatRupiah } from '../utils/format'
 import type { SalaryPredictionResponse } from '../types/api'
 import { Doughnut } from 'react-chartjs-2'
-import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js'
+import { Chart as ChartJS, ArcElement, Tooltip, type ChartOptions, type TooltipItem } from 'chart.js'
 
 ChartJS.register(ArcElement, Tooltip)
 
@@ -37,7 +37,7 @@ export function HousingAffordabilityCard({ prediction }: HousingAffordabilityCar
     ],
   }
 
-  const chartOptions = {
+  const chartOptions: ChartOptions<'doughnut'> = {
     cutout: '76%',
     plugins: {
       legend: {
@@ -52,7 +52,7 @@ export function HousingAffordabilityCard({ prediction }: HousingAffordabilityCar
         cornerRadius: 8,
         displayColors: false,
         callbacks: {
-          label: (context: any) => {
+          label: (context: TooltipItem<'doughnut'>) => {
             const val = context.raw as number
             return ` ${context.label}: ${val.toFixed(1)}%`
           },
@@ -64,11 +64,11 @@ export function HousingAffordabilityCard({ prediction }: HousingAffordabilityCar
   }
 
   return (
-    <section className="flex flex-col justify-between rounded-[32px] border border-[#E5E2E0] bg-white p-7 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+    <section className="flex h-full w-full flex-col justify-between rounded-[32px] border border-[#E5E2E0] bg-white p-7 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
       <div>
         <div className="mb-4 flex items-center justify-between gap-3">
-          <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.05em] text-[#696969]">
-            <span className="text-sm leading-none text-[#F37338]">•</span>
+          <p className="flex items-center gap-2 text-base font-extrabold text-[#141413] md:text-lg">
+            <span className="text-lg leading-none text-[#F37338]">•</span>
             Housing Affordability
           </p>
           <span
@@ -81,13 +81,13 @@ export function HousingAffordabilityCard({ prediction }: HousingAffordabilityCar
 
         <div className="mt-4 flex items-center justify-between gap-4">
           <div className="flex-1">
-            <div className="text-xs text-[#696969]">
+            <div className="text-sm leading-6 text-[#696969]">
               Est. Kos di {prediction.lokasi}
             </div>
             <div className="mt-1 text-2.5xl font-semibold tracking-[-0.02em] text-[#141413] md:text-3xl">
               {formatRupiah(prediction.estimasi_kos)}
             </div>
-            <div className="text-xs font-normal text-[#696969] mt-0.5">per bulan</div>
+            <div className="mt-0.5 text-sm font-normal text-[#696969]">per bulan</div>
           </div>
 
           <div className="relative flex items-center justify-center shrink-0 w-20 h-20">
@@ -105,17 +105,17 @@ export function HousingAffordabilityCard({ prediction }: HousingAffordabilityCar
       </div>
 
       <div className="mt-6 border-t border-[#E5E2E0] pt-5">
-        <div className="grid gap-2 text-xs text-[#555555]">
+        <div className="grid gap-2 text-sm text-[#555555]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full shrink-0" style={{ backgroundColor: status.color }} />
+              <span className="h-2 w-2 shrink-0 rounded-full bg-[#10b981]" />
               <span>Porsi Sewa Kos</span>
             </div>
             <span className="font-semibold text-[#141413]">{ratio.toFixed(1)}%</span>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full shrink-0 bg-[#EFEEE7]" />
+              <span className="h-2 w-2 shrink-0 rounded-full bg-[#F37338]" />
               <span>Sisa Pendapatan</span>
             </div>
             <span className="font-semibold text-[#696969]">{remaining.toFixed(1)}%</span>
