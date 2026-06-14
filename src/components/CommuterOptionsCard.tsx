@@ -487,10 +487,10 @@ function CommuterRouteMap({
         zoom={10}
         minZoom={8}
         maxZoom={14}
-        scrollWheelZoom={false}
-        dragging={false}
-        doubleClickZoom={false}
-        zoomControl={false}
+        scrollWheelZoom
+        dragging
+        doubleClickZoom
+        zoomControl
         className="h-full w-full"
       >
         <TileLayer attribution={TILE_ATTRIBUTION} url={TILE_URL} />
