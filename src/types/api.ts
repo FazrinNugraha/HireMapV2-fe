@@ -1,9 +1,11 @@
+// Opsi pilihan dari endpoint metadata, lengkap dengan multiplier model.
 export type MetadataOption = {
   value: string
   label: string
   multiplier: number
 }
 
+// Metadata dipakai untuk mengisi dropdown form prediksi.
 export type MetadataResponse = {
   locations: string[]
   categories: string[]
@@ -12,6 +14,7 @@ export type MetadataResponse = {
   certification_levels: MetadataOption[]
 }
 
+// Payload yang dikirim saat user menjalankan Salary Prediction.
 export type SalaryPredictionRequest = {
   job_title: string
   category: string
@@ -21,6 +24,7 @@ export type SalaryPredictionRequest = {
   certification_level: string
 }
 
+// Response utama model salary, termasuk faktor koreksi dan data housing.
 export type SalaryPredictionResponse = {
   judul: string
   kategori: string
@@ -47,11 +51,13 @@ export type SalaryPredictionResponse = {
   rasio_kos: number
 }
 
+// Satu item history chat antara user dan AI Consultant.
 export type ChatMessage = {
   role: 'user' | 'assistant'
   content: string
 }
 
+// Payload chat membawa history dan optional konteks prediksi terbaru.
 export type AiChatRequest = {
   message: string
   history: ChatMessage[]
@@ -62,6 +68,7 @@ export type AiChatResponse = {
   reply: string
 }
 
+// Ringkasan wilayah untuk peta, ranking, dan simulator komuter.
 export type SpatialSummaryItem = {
   Lokasi_Clean: string
   Jumlah_Lowongan: number
@@ -70,6 +77,7 @@ export type SpatialSummaryItem = {
   lon: number
 }
 
+// Detail satu wilayah setelah user memilih lokasi di Spatial Map.
 export type LocationDetailResponse = {
   lokasi: string
   total_jobs: number
