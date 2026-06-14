@@ -1,12 +1,15 @@
-import { FeasibilityScoreCard } from '../components/FeasibilityScoreCard'
-import type { SalaryPredictionResponse, SpatialSummaryItem } from '../types/api'
+import { FeasibilityScoreCard } from "../components/FeasibilityScoreCard";
+import type {
+  SalaryPredictionResponse,
+  SpatialSummaryItem,
+} from "../types/api";
 
 type AnalysisPageProps = {
-  prediction: SalaryPredictionResponse | null
-  spatialSummary: SpatialSummaryItem[]
-  onGoToSalary: () => void
-  onRequestAudit: (prompt: string) => void
-}
+  prediction: SalaryPredictionResponse | null;
+  spatialSummary: SpatialSummaryItem[];
+  onGoToSalary: () => void;
+  onRequestAudit: (prompt: string) => void;
+};
 
 export function AnalysisPage({
   prediction,
@@ -23,7 +26,8 @@ export function AnalysisPage({
           Analisis Karir &amp; Kelayakan
         </h1>
         <p className="mt-3 text-lg leading-8 text-[#696969]">
-          Indeks kelayakan berbasis data riil: rasio hunian, kualifikasi profil, dan kepadatan pasar kerja Jabodetabek.
+          Indeks kelayakan berbasis data riil: rasio hunian, kualifikasi profil,
+          dan kepadatan pasar kerja Jabodetabek.
         </p>
       </header>
 
@@ -31,9 +35,12 @@ export function AnalysisPage({
       {!prediction ? (
         <div className="flex flex-col items-center justify-center rounded-[32px] border-2 border-dashed border-[#D1CDC7] bg-[#FCFBFA]/50 p-16 text-center">
           <span className="text-5xl">📊</span>
-          <h2 className="mt-5 text-xl font-bold text-[#141413]">Analisis Belum Tersedia</h2>
+          <h2 className="mt-5 text-xl font-bold text-[#141413]">
+            Analisis Belum Tersedia
+          </h2>
           <p className="mt-2 max-w-sm text-sm leading-6 text-[#696969]">
-            Jalankan prediksi gaji terlebih dahulu agar sistem bisa menghasilkan analisis kelayakan karir &amp; finansial yang akurat.
+            Jalankan prediksi gaji terlebih dahulu agar sistem bisa menghasilkan
+            analisis kelayakan karir &amp; finansial yang akurat.
           </p>
           <button
             type="button"
@@ -53,5 +60,5 @@ export function AnalysisPage({
         </div>
       )}
     </main>
-  )
+  );
 }

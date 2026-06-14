@@ -2,6 +2,10 @@ type ErrorBannerProps = {
   message: string | null
 }
 
+/**
+ * Banner error global.
+ * Dipakai untuk menampilkan pesan API/form tanpa mengubah layout halaman utama.
+ */
 export function ErrorBanner({ message }: ErrorBannerProps) {
   if (!message) return null
 
@@ -12,5 +16,4 @@ export function ErrorBanner({ message }: ErrorBannerProps) {
     </div>
   )
 }
-
 

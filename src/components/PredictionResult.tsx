@@ -1,83 +1,99 @@
-import { ArcElement, Chart as ChartJS, Tooltip, type ChartOptions, type TooltipItem } from 'chart.js'
-import { Doughnut } from 'react-chartjs-2'
-import type { SalaryPredictionResponse } from '../types/api'
-import { formatRupiah } from '../utils/format'
+import {
+  ArcElement,
+  Chart as ChartJS,
+  Tooltip,
+  type ChartOptions,
+  type TooltipItem,
+} from "chart.js";
+import { Doughnut } from "react-chartjs-2";
+import { FeatureHeader } from "./FeatureHeader";
+import type { SalaryPredictionResponse } from "../types/api";
+import { formatRupiah } from "../utils/format";
 
-ChartJS.register(ArcElement, Tooltip)
+ChartJS.register(ArcElement, Tooltip);
 
 type PredictionResultProps = {
-  prediction: SalaryPredictionResponse | null
-}
+  prediction: SalaryPredictionResponse | null;
+};
 
 function getConfidenceScore(label: string) {
-  const normalized = label.toLowerCase()
-  if (normalized.includes('high') || normalized.includes('tinggi')) return 88
-  if (normalized.includes('medium') || normalized.includes('sedang')) return 68
-  if (normalized.includes('low') || normalized.includes('rendah')) return 42
-  return 60
+  const normalized = label.toLowerCase();
+  if (normalized.includes("high") || normalized.includes("tinggi")) return 88;
+  if (normalized.includes("medium") || normalized.includes("sedang")) return 68;
+  if (normalized.includes("low") || normalized.includes("rendah")) return 42;
+  return 60;
 }
 
 function getConfidenceStatus(score: number) {
-  if (score >= 80) return { label: 'Tinggi', color: '#10b981', bg: '#10b98115' }
-  if (score >= 60) return { label: 'Sedang', color: '#f59e0b', bg: '#f59e0b15' }
-  return { label: 'Rendah', color: '#ef4444', bg: '#ef444415' }
+  if (score >= 80)
+    return { label: "Tinggi", color: "#10b981", bg: "#10b98115" };
+  if (score >= 60)
+    return { label: "Sedang", color: "#f59e0b", bg: "#f59e0b15" };
+  return { label: "Rendah", color: "#ef4444", bg: "#ef444415" };
 }
 
+/**
+ * Card ringkasan prediksi gaji.
+ * Menampilkan nominal gaji, confidence model, dan konteks posisi/lokasi.
+ */
 export function PredictionResult({ prediction }: PredictionResultProps) {
-  if (!prediction) return null
+  if (!prediction) return null;
 
-  const confidenceScore = getConfidenceScore(prediction.confidence_label)
-  const confidenceStatus = getConfidenceStatus(confidenceScore)
+  const confidenceScore = getConfidenceScore(prediction.confidence_label);
+  const confidenceStatus = getConfidenceStatus(confidenceScore);
   const chartData = {
-    labels: ['Confidence', 'Uncertainty'],
+    labels: ["Confidence", "Uncertainty"],
     datasets: [
       {
         data: [confidenceScore, 100 - confidenceScore],
-        backgroundColor: [confidenceStatus.color, '#EFEEE7'],
-        hoverBackgroundColor: [confidenceStatus.color, '#E4E2DC'],
+        backgroundColor: [confidenceStatus.color, "#EFEEE7"],
+        hoverBackgroundColor: [confidenceStatus.color, "#E4E2DC"],
         borderWidth: 0,
       },
     ],
-  }
-  const chartOptions: ChartOptions<'doughnut'> = {
-    cutout: '76%',
+  };
+  const chartOptions: ChartOptions<"doughnut"> = {
+    cutout: "76%",
     maintainAspectRatio: false,
     responsive: true,
     plugins: {
       legend: { display: false },
       tooltip: {
         enabled: true,
-        backgroundColor: '#141413',
-        titleFont: { family: 'Sofia Sans', size: 11 },
-        bodyFont: { family: 'Sofia Sans', size: 11 },
+        backgroundColor: "#141413",
+        titleFont: { family: "Sofia Sans", size: 11 },
+        bodyFont: { family: "Sofia Sans", size: 11 },
         padding: 8,
         cornerRadius: 8,
         displayColors: false,
         callbacks: {
-          label: (context: TooltipItem<'doughnut'>) => {
-            const value = Number(context.raw)
-            return ` ${context.label}: ${value.toFixed(0)}%`
+          label: (context: TooltipItem<"doughnut">) => {
+            const value = Number(context.raw);
+            return ` ${context.label}: ${value.toFixed(0)}%`;
           },
         },
       },
     },
-  }
+  };
 
   return (
     <section className="flex h-full w-full flex-col justify-between rounded-[32px] border border-[#E5E2E0] bg-white p-7 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
       <div>
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <p className="flex items-center gap-2 text-base font-extrabold text-[#141413] md:text-lg">
-            <span className="text-lg leading-none text-[#F37338]">•</span>
-            Salary Estimate
-          </p>
-          <span
-            className="rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider"
-            style={{ backgroundColor: confidenceStatus.bg, color: confidenceStatus.color }}
-          >
-            {confidenceStatus.label} Confidence
-          </span>
-        </div>
+        <FeatureHeader
+          title="Salary Estimate"
+          action={
+            <span
+              className="rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider"
+              style={{
+                backgroundColor: confidenceStatus.bg,
+                color: confidenceStatus.color,
+              }}
+            >
+              {confidenceStatus.label} Confidence
+            </span>
+          }
+          className="mb-4"
+        />
 
         <div className="mt-4 flex items-center justify-between gap-4">
           <div className="min-w-0 flex-1">
@@ -85,7 +101,8 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
               {formatRupiah(prediction.gaji_prediksi)}
             </h3>
             <p className="mt-2 text-sm leading-6 text-[#696969]">
-              Estimasi model berdasarkan profil pekerjaan dan faktor kualifikasi.
+              Estimasi model berdasarkan profil pekerjaan dan faktor
+              kualifikasi.
             </p>
           </div>
 
@@ -110,7 +127,9 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
               <span className="h-2 w-2 shrink-0 rounded-full bg-[#10b981]" />
               <span>Confidence Model</span>
             </div>
-            <span className="font-semibold text-[#141413]">{confidenceScore}%</span>
+            <span className="font-semibold text-[#141413]">
+              {confidenceScore}%
+            </span>
           </div>
           <div className="flex items-center justify-between gap-4">
             <div className="flex shrink-0 items-center gap-2">
@@ -124,5 +143,5 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
         </div>
       </div>
     </section>
-  )
+  );
 }

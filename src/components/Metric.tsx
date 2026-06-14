@@ -3,6 +3,10 @@ type MetricProps = {
   value: string
 }
 
+/**
+ * Row metrik ringkas.
+ * Dipakai di panel gelap untuk pasangan label dan nilai.
+ */
 export function Metric({ label, value }: MetricProps) {
   return (
     <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-3">
@@ -11,4 +15,3 @@ export function Metric({ label, value }: MetricProps) {
     </div>
   )
 }
-

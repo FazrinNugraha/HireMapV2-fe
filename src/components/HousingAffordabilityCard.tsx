@@ -1,83 +1,97 @@
-import { formatRupiah } from '../utils/format'
-import type { SalaryPredictionResponse } from '../types/api'
-import { Doughnut } from 'react-chartjs-2'
-import { Chart as ChartJS, ArcElement, Tooltip, type ChartOptions, type TooltipItem } from 'chart.js'
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  type ChartOptions,
+  type TooltipItem,
+} from "chart.js";
+import { Doughnut } from "react-chartjs-2";
+import { FeatureHeader } from "./FeatureHeader";
+import type { SalaryPredictionResponse } from "../types/api";
+import { formatRupiah } from "../utils/format";
 
-ChartJS.register(ArcElement, Tooltip)
+ChartJS.register(ArcElement, Tooltip);
 
 type HousingAffordabilityCardProps = {
-  prediction: SalaryPredictionResponse | null
-}
+  prediction: SalaryPredictionResponse | null;
+};
 
-type HousingStatus = { label: string; color: string; bg: string }
+type HousingStatus = { label: string; color: string; bg: string };
 
 function getHousingStatus(ratio: number): HousingStatus {
-  if (ratio <= 0) return { label: 'Waiting', color: '#696969', bg: '#EFEEE7' }
-  if (ratio <= 30) return { label: 'Ideal', color: '#10b981', bg: '#10b98115' }
-  if (ratio <= 50) return { label: 'Consider', color: '#f59e0b', bg: '#f59e0b15' }
-  return { label: 'Heavy Burden', color: '#ef4444', bg: '#ef444415' }
+  if (ratio <= 0) return { label: "Waiting", color: "#696969", bg: "#EFEEE7" };
+  if (ratio <= 30) return { label: "Ideal", color: "#10b981", bg: "#10b98115" };
+  if (ratio <= 50)
+    return { label: "Consider", color: "#f59e0b", bg: "#f59e0b15" };
+  return { label: "Heavy Burden", color: "#ef4444", bg: "#ef444415" };
 }
 
-export function HousingAffordabilityCard({ prediction }: HousingAffordabilityCardProps) {
-  if (!prediction) return null
+/**
+ * Card keterjangkauan hunian.
+ * Mengukur porsi estimasi kos terhadap gaji prediksi agar user tahu beban sewa bulanannya.
+ */
+export function HousingAffordabilityCard({
+  prediction,
+}: HousingAffordabilityCardProps) {
+  if (!prediction) return null;
 
-  const ratio = prediction.rasio_kos
-  const remaining = 100 - ratio
-  const status = getHousingStatus(ratio)
+  const ratio = prediction.rasio_kos;
+  const remaining = 100 - ratio;
+  const status = getHousingStatus(ratio);
 
   const chartData = {
-    labels: ['Porsi Sewa Kos', 'Sisa Pendapatan'],
+    labels: ["Porsi Sewa Kos", "Sisa Pendapatan"],
     datasets: [
       {
         data: [ratio, remaining],
-        backgroundColor: [status.color, '#EFEEE7'],
-        hoverBackgroundColor: [status.color, '#E4E2DC'],
+        backgroundColor: [status.color, "#EFEEE7"],
+        hoverBackgroundColor: [status.color, "#E4E2DC"],
         borderWidth: 0,
       },
     ],
-  }
+  };
 
-  const chartOptions: ChartOptions<'doughnut'> = {
-    cutout: '76%',
+  const chartOptions: ChartOptions<"doughnut"> = {
+    cutout: "76%",
     plugins: {
       legend: {
         display: false,
       },
       tooltip: {
         enabled: true,
-        backgroundColor: '#141413',
-        titleFont: { family: 'Sofia Sans', size: 11 },
-        bodyFont: { family: 'Sofia Sans', size: 11 },
+        backgroundColor: "#141413",
+        titleFont: { family: "Sofia Sans", size: 11 },
+        bodyFont: { family: "Sofia Sans", size: 11 },
         padding: 8,
         cornerRadius: 8,
         displayColors: false,
         callbacks: {
-          label: (context: TooltipItem<'doughnut'>) => {
-            const val = context.raw as number
-            return ` ${context.label}: ${val.toFixed(1)}%`
+          label: (context: TooltipItem<"doughnut">) => {
+            const val = context.raw as number;
+            return ` ${context.label}: ${val.toFixed(1)}%`;
           },
         },
       },
     },
     maintainAspectRatio: false,
     responsive: true,
-  }
+  };
 
   return (
     <section className="flex h-full w-full flex-col justify-between rounded-[32px] border border-[#E5E2E0] bg-white p-7 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
       <div>
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <p className="flex items-center gap-2 text-base font-extrabold text-[#141413] md:text-lg">
-            <span className="text-lg leading-none text-[#F37338]">•</span>
-            Housing Affordability
-          </p>
-          <span
-            className="rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider"
-            style={{ backgroundColor: status.bg, color: status.color }}
-          >
-            {status.label}
-          </span>
-        </div>
+        <FeatureHeader
+          title="Housing Affordability"
+          action={
+            <span
+              className="rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider"
+              style={{ backgroundColor: status.bg, color: status.color }}
+            >
+              {status.label}
+            </span>
+          }
+          className="mb-4"
+        />
 
         <div className="mt-4 flex items-center justify-between gap-4">
           <div className="flex-1">
@@ -87,7 +101,9 @@ export function HousingAffordabilityCard({ prediction }: HousingAffordabilityCar
             <div className="mt-1 text-2.5xl font-semibold tracking-[-0.02em] text-[#141413] md:text-3xl">
               {formatRupiah(prediction.estimasi_kos)}
             </div>
-            <div className="mt-0.5 text-sm font-normal text-[#696969]">per bulan</div>
+            <div className="mt-0.5 text-sm font-normal text-[#696969]">
+              per bulan
+            </div>
           </div>
 
           <div className="relative flex items-center justify-center shrink-0 w-20 h-20">
@@ -111,17 +127,21 @@ export function HousingAffordabilityCard({ prediction }: HousingAffordabilityCar
               <span className="h-2 w-2 shrink-0 rounded-full bg-[#10b981]" />
               <span>Porsi Sewa Kos</span>
             </div>
-            <span className="font-semibold text-[#141413]">{ratio.toFixed(1)}%</span>
+            <span className="font-semibold text-[#141413]">
+              {ratio.toFixed(1)}%
+            </span>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 shrink-0 rounded-full bg-[#F37338]" />
               <span>Sisa Pendapatan</span>
             </div>
-            <span className="font-semibold text-[#696969]">{remaining.toFixed(1)}%</span>
+            <span className="font-semibold text-[#696969]">
+              {remaining.toFixed(1)}%
+            </span>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
