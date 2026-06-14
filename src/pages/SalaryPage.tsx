@@ -69,7 +69,7 @@ export function SalaryPage({
         </p>
       </header>
 
-      <section className="col-span-1 flex flex-col lg:col-span-5 lg:self-start">
+      <section className="col-span-1 flex flex-col lg:col-span-5">
         <PredictionForm
           form={form}
           metadata={metadata}
