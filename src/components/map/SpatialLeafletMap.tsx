@@ -72,18 +72,23 @@ export function SpatialLeafletMap({
       </MapContainer>
 
       {/* Legend */}
-      <div className="absolute bottom-3 left-3 z-[500] max-w-[calc(100%-1.5rem)] overflow-hidden rounded-[18px] border border-[#E5E2E0] bg-white/95 p-3 text-[11px] shadow-sm backdrop-blur-sm sm:bottom-5 sm:left-5 sm:rounded-[20px] sm:p-4 sm:text-xs">
-        <h4 className="mb-2 font-bold uppercase tracking-[0.04em] text-[#696969]">
-          Job Opportunity
-        </h4>
-        <div className="grid gap-2">
-          <LegendItem color="#10b981" label="High Opportunity" />
-          <LegendItem color="#f59e0b" label="Moderate" />
-          <LegendItem color="#ef4444" label="Low Opportunity" />
+      <div className="absolute bottom-3 left-3 z-[500] flex flex-wrap items-center gap-x-3.5 gap-y-1.5 rounded-[16px] sm:rounded-full border border-[#E5E2E0] bg-white/90 px-3.5 py-2 text-[10px] font-bold text-[#555555] shadow-sm backdrop-blur-sm sm:bottom-4 sm:left-4">
+        <div className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-[#10b981]" />
+          <span>High Opportunity</span>
         </div>
-        <div className="mt-3 border-t border-[#E5E2E0] pt-2 text-[10px] text-[#696969]">
-          Ukuran marker = jumlah lowongan
+        <div className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-[#f59e0b]" />
+          <span>Moderate</span>
         </div>
+        <div className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-[#ef4444]" />
+          <span>Low Opportunity</span>
+        </div>
+        <span className="h-3 w-px bg-[#E5E2E0] mx-0.5" />
+        <span className="text-[#A0A09A] font-semibold text-[9px] uppercase tracking-wider">
+          Ukuran = Jumlah Lowongan
+        </span>
       </div>
     </div>
   )
@@ -100,14 +105,7 @@ function MapFocus({ selectedItem }: { selectedItem?: SpatialSummaryItem }) {
   return null
 }
 
-function LegendItem({ color, label }: { color: string; label: string }) {
-  return (
-    <div className="flex items-center gap-2 text-[#555555]">
-      <span className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: color }} />
-      <span>{label}</span>
-    </div>
-  )
-}
+
 
 /* Score helpers */
 

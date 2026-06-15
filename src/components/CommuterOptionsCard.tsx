@@ -68,21 +68,21 @@ const MODES: Array<{
   durationMultiplier: number;
   routeIndex: number;
 }> = [
-  {
-    key: "car",
-    label: "Mobil",
-    color: "#3860BE",
-    durationMultiplier: 1,
-    routeIndex: 0,
-  },
-  {
-    key: "motor",
-    label: "Motor",
-    color: "#10b981",
-    durationMultiplier: 0.8,
-    routeIndex: 1,
-  },
-];
+    {
+      key: "car",
+      label: "Mobil",
+      color: "#3860BE",
+      durationMultiplier: 1,
+      routeIndex: 0,
+    },
+    {
+      key: "motor",
+      label: "Motor",
+      color: "#10b981",
+      durationMultiplier: 0.8,
+      routeIndex: 1,
+    },
+  ];
 
 // Route cache key: satu kombinasi asal-tujuan-moda hanya fetch OSRM sekali.
 function getRouteKey(
@@ -106,9 +106,9 @@ function calculateDistance(
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
@@ -164,9 +164,9 @@ async function fetchOsrmRoute(request: RouteRequest): Promise<RouteInfo> {
     coordinates: route.geometry?.coordinates.map(
       ([lon, lat]) => [lat, lon] as LatLngTuple,
     ) ?? [
-      [request.origin.lat, request.origin.lon],
-      [request.destination.lat, request.destination.lon],
-    ],
+        [request.origin.lat, request.origin.lon],
+        [request.destination.lat, request.destination.lon],
+      ],
     source: "osrm",
   };
 }
@@ -323,7 +323,7 @@ export function CommuterOptionsCard({
             <button
               type="button"
               onClick={() => setSelectedLocations([])}
-              className="rounded-full border border-[#3860BE]/25 bg-[#3860BE]/10 px-3.5 py-1.5 text-[11px] font-bold text-[#3860BE] shadow-[0_0_18px_rgba(56,96,190,0.16)] transition hover:border-[#3860BE]/45 hover:bg-[#3860BE]/15 disabled:cursor-not-allowed disabled:border-[#E5E2E0] disabled:bg-white disabled:text-[#A0A09A] disabled:shadow-none"
+              className="rounded-full border border-[#E5E2E0] bg-white px-3.5 py-1.5 text-[11px] font-bold text-[#141413] shadow-sm transition hover:border-[#141413] hover:bg-[#FCFBFA] disabled:cursor-not-allowed disabled:border-[#E5E2E0] disabled:bg-white disabled:text-[#A0A09A] disabled:shadow-none"
               disabled={selectedLocations.length === 0}
             >
               Reset
@@ -341,8 +341,8 @@ export function CommuterOptionsCard({
                   onClick={() => toggleLocation(option.lokasi)}
                   className={`min-h-9 rounded-full border px-3 py-1.5 text-center text-xs font-semibold leading-5 transition ${
                     isSelected
-                      ? "border-[#3860BE] bg-[#3860BE] text-white shadow-[0_8px_22px_rgba(56,96,190,0.22)]"
-                      : "border-[#3860BE]/20 bg-[#3860BE]/6 text-[#31518F] hover:border-[#3860BE]/40 hover:bg-[#3860BE]/12"
+                      ? "border-[#141413] bg-[#141413] text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
+                      : "border-[#E5E2E0] bg-white text-[#555555] hover:border-[#141413] hover:bg-[#FCFBFA]"
                   }`}
                 >
                   {option.lokasi}
@@ -395,7 +395,7 @@ export function CommuterOptionsCard({
                         </span>
                       </div>
 
-                      <div className="mt-3 overflow-hidden rounded-[14px] border border-[#E5E2E0] bg-white">
+                      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                         {routes.map(({ mode, route, fallbackRoute }) => {
                           const modeConfig = getModeConfig(mode);
                           const activeRoute = route ?? fallbackRoute;
@@ -408,34 +408,118 @@ export function CommuterOptionsCard({
                           return (
                             <div
                               key={mode}
-                              className="grid gap-2 border-b border-[#E5E2E0] px-3 py-2.5 last:border-b-0 sm:grid-cols-[88px_minmax(0,1fr)_auto] sm:items-center"
+                              className="relative flex flex-col justify-between overflow-hidden rounded-[16px] border border-[#E5E2E0] bg-white p-4 transition-all duration-300 hover:border-[#141413]/25 hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)]"
                             >
-                              <div className="flex items-center gap-2 text-xs font-bold text-[#141413]">
+                              {/* Header: Mode Title with Icon + Status Badge */}
+                              <div className="flex items-center justify-between border-b border-[#F0EFEA] pb-3">
+                                <div className="flex items-center gap-2">
+                                  <div
+                                    className="flex h-8 w-8 items-center justify-center rounded-lg"
+                                    style={{
+                                      backgroundColor: `${modeConfig.color}12`,
+                                      color: modeConfig.color,
+                                    }}
+                                  >
+                                    {mode === "car" ? (
+                                      <svg
+                                        className="h-4.5 w-4.5"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      >
+                                        <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4 1L2 12c-.5.8-.5 2-.5 3v1c0 .6.4 1 1 1h2" />
+                                        <circle cx="7" cy="17" r="2" />
+                                        <path d="M9 17h6" />
+                                        <circle cx="17" cy="17" r="2" />
+                                      </svg>
+                                    ) : (
+                                      <svg
+                                        className="h-4.5 w-4.5"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      >
+                                        <circle cx="5" cy="18" r="3" />
+                                        <circle cx="19" cy="18" r="3" />
+                                        <path d="M12 18V10h7m-7 3h4m-8-3l3-4h4" />
+                                      </svg>
+                                    )}
+                                  </div>
+                                  <span className="text-sm font-bold text-[#141413]">
+                                    {modeConfig.label}
+                                  </span>
+                                </div>
+
                                 <span
-                                  className="h-2 w-2 rounded-full"
-                                  style={{ backgroundColor: modeConfig.color }}
-                                />
-                                {modeConfig.label}
+                                  className={`inline-flex rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${status.className}`}
+                                >
+                                  {status.label}
+                                </span>
                               </div>
-                              <div className="flex flex-wrap gap-1.5">
-                                <MetricPill
-                                  label="Jarak"
-                                  value={`${activeRoute.distance.toFixed(1)} KM`}
-                                />
-                                <MetricPill
-                                  label="Waktu"
-                                  value={
-                                    isLoading
-                                      ? "Memuat"
-                                      : `~${activeRoute.duration} mnt`
-                                  }
-                                />
+
+                              {/* Metrics Grid */}
+                              <div className="grid grid-cols-2 gap-2.5 pt-3">
+                                {/* Jarak */}
+                                <div className="flex flex-col gap-1 rounded-xl bg-[#FCFBFA] p-2.5 border border-[#E5E2E0]/40">
+                                  <span className="text-[10px] font-bold uppercase tracking-[0.04em] text-[#696969]">
+                                    Jarak
+                                  </span>
+                                  <div className="flex items-center gap-1 text-[#141413]">
+                                    <svg
+                                      className="h-3.5 w-3.5 text-[#A0A09A]"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2.2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    >
+                                      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z" />
+                                      <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                    <span className="text-[13px] font-extrabold">
+                                      {activeRoute.distance.toFixed(1)} KM
+                                    </span>
+                                  </div>
+                                </div>
+
+                                {/* Waktu */}
+                                <div className="flex flex-col gap-1 rounded-xl bg-[#FCFBFA] p-2.5 border border-[#E5E2E0]/40">
+                                  <span className="text-[10px] font-bold uppercase tracking-[0.04em] text-[#696969]">
+                                    Waktu
+                                  </span>
+                                  <div className="flex items-center gap-1 text-[#141413]">
+                                    <svg
+                                      className="h-3.5 w-3.5 text-[#A0A09A]"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2.2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    >
+                                      <circle cx="12" cy="12" r="10" />
+                                      <polyline points="12 6 12 12 16 14" />
+                                    </svg>
+                                    <span className="text-[13px] font-extrabold">
+                                      {isLoading ? (
+                                        <span className="inline-flex items-center gap-1">
+                                          <span className="spinner h-3 w-3" />
+                                          Memuat
+                                        </span>
+                                      ) : (
+                                        `~${activeRoute.duration} mnt`
+                                      )}
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
-                              <span
-                                className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-[11px] font-semibold ${status.className}`}
-                              >
-                                {status.label}
-                              </span>
                             </div>
                           );
                         })}
@@ -555,7 +639,7 @@ function CommuterRouteMap({
           </Tooltip>
         </CircleMarker>
       </MapContainer>
-      <div className="pointer-events-none absolute left-3 top-3 z-[500] flex gap-1.5 rounded-full border border-[#E5E2E0] bg-white/95 px-2.5 py-1.5 text-[10px] font-bold text-[#555555] shadow-sm backdrop-blur">
+      <div className="pointer-events-none absolute right-3 top-3 z-[500] flex gap-1.5 rounded-full border border-[#E5E2E0] bg-white/95 px-2.5 py-1.5 text-[10px] font-bold text-[#555555] shadow-sm backdrop-blur">
         {MODES.map((mode) => (
           <span key={mode.key} className="inline-flex items-center gap-1.5">
             <span
@@ -570,14 +654,6 @@ function CommuterRouteMap({
   );
 }
 
-function MetricPill({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="inline-flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[11px] shadow-[inset_0_0_0_1px_rgba(20,20,19,0.06)]">
-      <span className="font-semibold text-[#A0A09A]">{label}</span>
-      <span className="font-bold text-[#141413]">{value}</span>
-    </div>
-  );
-}
 
 function FitRouteBounds({ positions }: { positions: LatLngTuple[] }) {
   const map = useMap();

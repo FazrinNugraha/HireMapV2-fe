@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import { Doughnut, Bar } from "react-chartjs-2";
 import { FeatureHeader } from "./FeatureHeader";
+import { SelectField } from "./SelectField";
 import type {
   SalaryPredictionResponse,
   SpatialSummaryItem,
@@ -361,24 +362,15 @@ export function FeasibilityScoreCard({
         <div className="mt-6">
           <div className="flex flex-col gap-2 rounded-2xl bg-[#F9F8F6] p-4 border border-[#E4E2DC] transition-all hover:border-[#A0A09A]">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <label
-                htmlFor="domicile-select"
-                className="text-xs font-bold uppercase tracking-wider text-[#696969]"
-              >
+              <span className="text-xs font-bold uppercase tracking-wider text-[#696969]">
                 Domisili Anda (Asal)
-              </label>
-              <select
-                id="domicile-select"
+              </span>
+              <SelectField
                 value={domicile}
-                onChange={(e) => setDomicile(e.target.value)}
-                className="w-full cursor-pointer rounded-full border border-[#E5E2E0] bg-white px-3 py-2 text-xs font-semibold text-[#141413] shadow-sm outline-none transition-colors focus:border-[#141413] sm:w-auto"
-              >
-                {spatialSummary.map((item) => (
-                  <option key={item.Lokasi_Clean} value={item.Lokasi_Clean}>
-                    {item.Lokasi_Clean}
-                  </option>
-                ))}
-              </select>
+                options={spatialSummary.map((item) => item.Lokasi_Clean)}
+                onChange={setDomicile}
+                variant="outline"
+              />
             </div>
             <p className="text-[11px] text-[#A0A09A]">
               Pilih domisili saat ini untuk menghitung jarak & kelayakan commute

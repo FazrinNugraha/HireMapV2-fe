@@ -97,10 +97,16 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
 
         <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0 flex-1">
-            <h3 className="text-2xl font-semibold tracking-[-0.02em] text-[#141413] md:text-3xl">
+            <div className="text-sm leading-6 text-[#696969]">
+              Est. Gaji yang diterima
+            </div>
+            <div className="mt-1 text-2xl font-semibold tracking-[-0.02em] text-[#141413] md:text-3xl">
               {formatRupiah(prediction.gaji_prediksi)}
-            </h3>
-            <p className="mt-2 text-sm leading-6 text-[#696969]">
+            </div>
+            <div className="mt-0.5 text-sm font-normal text-[#696969]">
+              per bulan
+            </div>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-[#696969]">
               Estimasi model berdasarkan posisi pekerjaan, pengalaman, pendidikan, dan sertifikasi.
             </p>
           </div>

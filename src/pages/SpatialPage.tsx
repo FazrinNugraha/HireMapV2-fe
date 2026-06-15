@@ -116,6 +116,8 @@ export function SpatialPage({ metadata, prediction }: SpatialPageProps) {
         onSelectLocation={setSelectedLocation}
       />
 
+      <RegionalRankingTable summary={summary} stats={stats} />
+
       {prediction && (
         <section>
           <CommuterOptionsCard
@@ -124,8 +126,6 @@ export function SpatialPage({ metadata, prediction }: SpatialPageProps) {
           />
         </section>
       )}
-
-      <RegionalRankingTable summary={summary} stats={stats} />
     </main>
   );
 }
@@ -429,12 +429,20 @@ function RegionalRankingTable({
   summary: SpatialSummaryItem[];
   stats: ReturnType<typeof getSpatialStats>;
 }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const displayedSummary = isExpanded ? summary : summary.slice(0, 3);
+
   return (
     <section className="overflow-hidden rounded-[32px] border border-[#E5E2E0] bg-white shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
       <div className="flex items-center justify-between border-b border-[#E5E2E0] p-6 md:p-8">
-        <h2 className="text-xl font-semibold tracking-[-0.01em] text-[#141413]">
-          Regional Ranking
-        </h2>
+        <div>
+          <h2 className="text-xl font-semibold tracking-[-0.01em] text-[#141413]">
+            Regional Ranking
+          </h2>
+          <p className="mt-1 text-xs text-[#696969]">
+            Peringkat wilayah berdasarkan peluang kerja dan keterjangkauan hunian.
+          </p>
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left">
@@ -454,7 +462,7 @@ function RegionalRankingTable({
             </tr>
           </thead>
           <tbody className="text-sm text-[#141413]">
-            {summary.map((item, index) => {
+            {displayedSummary.map((item, index) => {
               const score = getSweetSpotScore(item, stats);
               const color = getSweetSpotColor(score);
               const label = getSweetSpotLabel(score);
@@ -488,6 +496,35 @@ function RegionalRankingTable({
           </tbody>
         </table>
       </div>
+
+      {summary.length > 3 && (
+        <div className="border-t border-[#E5E2E0] bg-[#FCFBFA] p-4 text-center">
+          <button
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-full border border-[#E5E2E0] bg-white px-5 py-2 text-xs font-bold text-[#141413] shadow-sm transition-all hover:border-[#141413] hover:bg-[#FCFBFA] active:scale-95"
+          >
+            <span>
+              {isExpanded
+                ? "Tampilkan Lebih Sedikit"
+                : `Tampilkan Semua (${summary.length} Wilayah)`}
+            </span>
+            <svg
+              className={`h-3.5 w-3.5 transition-transform duration-200 ${
+                isExpanded ? "rotate-180" : ""
+              }`}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+        </div>
+      )}
     </section>
   );
 }

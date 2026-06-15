@@ -8,7 +8,7 @@ type SelectFieldProps = {
   disabled?: boolean;
   onChange: (value: string) => void;
   icon?: ReactNode;
-  variant?: "form" | "pill";
+  variant?: "form" | "pill" | "outline";
 };
 
 export function SelectField({
@@ -64,14 +64,19 @@ export function SelectField({
               setIsOpen(!isOpen);
             }
           }}
+          title={value}
           className={
             variant === "form"
               ? `w-full text-left rounded-[20px] border border-[#E5E2E0] bg-[#FCFBFA] py-3 pr-10 text-sm text-[#141413] outline-none transition-all hover:border-[#C7C7C0] focus:border-[#141413] focus:bg-white focus:ring-4 focus:ring-[#141413]/5 flex items-center justify-between gap-2 min-w-0 ${
                   icon ? "pl-11" : "pl-4"
                 } ${isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`
-              : `cursor-pointer rounded-full bg-transparent px-3 py-2 text-sm font-semibold text-[#141413] flex items-center justify-between gap-1.5 hover:bg-[#EFEEE7]/60 transition-colors sm:px-4 ${
-                  isDisabled ? "cursor-not-allowed opacity-50" : ""
-                }`
+              : variant === "outline"
+                ? `cursor-pointer rounded-full border border-[#E5E2E0] bg-white px-3 py-1.5 text-xs font-semibold text-[#141413] flex items-center justify-between gap-1.5 hover:border-[#141413] hover:bg-[#FCFBFA] transition-all shadow-sm ${
+                    isDisabled ? "cursor-not-allowed opacity-50" : ""
+                  }`
+                : `cursor-pointer rounded-full bg-transparent px-3 py-2 text-sm font-semibold text-[#141413] flex items-center justify-between gap-1.5 hover:bg-[#EFEEE7]/60 transition-colors sm:px-4 ${
+                    isDisabled ? "cursor-not-allowed opacity-50" : ""
+                  }`
           }
         >
           <div className="flex items-center gap-2 truncate min-w-0">
@@ -121,13 +126,14 @@ export function SelectField({
                     onChange(option);
                     setIsOpen(false);
                   }}
+                  title={option}
                   className={`w-full text-left rounded-[16px] px-3.5 py-2.5 text-xs font-medium transition-all flex items-center justify-between gap-3 ${
                     isSelected
                       ? "bg-[#EFEEE7] text-[#141413] font-bold"
                       : "text-[#555555] hover:bg-[#FCFBFA] hover:text-[#141413]"
                   }`}
                 >
-                  <span className="truncate">{option}</span>
+                  <span className="whitespace-normal break-words text-left flex-1">{option}</span>
                   {isSelected && (
                     <span className="text-[#10b981] shrink-0 font-bold">
                       <svg

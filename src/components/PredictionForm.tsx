@@ -128,7 +128,7 @@ export function PredictionForm({
           </h2>
         </div>
 
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 lg:gap-7.5">
           {/* Posisi Pekerjaan */}
           <label className="grid gap-1.5">
             <span className="text-xs font-bold text-[#696969] uppercase tracking-wider">
@@ -150,7 +150,7 @@ export function PredictionForm({
           </label>
 
           {/* Kategori & Lokasi */}
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 lg:gap-6 sm:grid-cols-2">
             <SelectField
               label="Kategori pekerjaan"
               value={form.category}
@@ -170,7 +170,7 @@ export function PredictionForm({
           </div>
 
           {/* Pengalaman & Pendidikan */}
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 lg:gap-6 sm:grid-cols-2">
             <SelectField
               label="Level pengalaman"
               value={form.experience_level}
@@ -214,7 +214,7 @@ export function PredictionForm({
       </div>
 
       <button
-        className="mt-8 flex w-full items-center justify-center gap-2 rounded-[20px] bg-[#141413] px-6 py-4 text-sm font-semibold tracking-[-0.01em] text-[#F3F0EE] transition-opacity hover:opacity-90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40"
+        className="mt-6 flex w-full items-center justify-center gap-2 rounded-[20px] bg-[#141413] px-6 py-4 text-sm font-semibold tracking-[-0.01em] text-[#F3F0EE] transition-opacity hover:opacity-90 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40"
         type="submit"
         disabled={!canSubmit}
       >
