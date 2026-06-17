@@ -387,10 +387,9 @@ export function CommuterOptionsCard({
   if (!targetLocation || spatialSummary.length === 0) return null;
 
   const toggleLocation = (location: string) => {
+    // Single-select: klik kota yang sama → deselect, klik kota lain → ganti pilihan
     setSelectedLocations((current) =>
-      current.includes(location)
-        ? current.filter((item) => item !== location)
-        : [...current, location],
+      current.includes(location) ? [] : [location]
     );
   };
 
@@ -422,8 +421,8 @@ export function CommuterOptionsCard({
               </h4>
               <p className="mt-0.5 text-xs text-[#A0A09A]">
                 {selectedLocations.length > 0
-                  ? `${selectedLocations.length} kota dipilih`
-                  : "Pilih satu atau beberapa kota asal"}
+                  ? `${selectedLocations[0]} dipilih`
+                  : "Pilih satu kota asal komuter"}
               </p>
             </div>
             <button
@@ -676,7 +675,7 @@ export function CommuterOptionsCard({
             </div>
 
             {/* Sisi Kanan: Map Terpadu yang Sticky */}
-            <div className="lg:col-span-5 xl:col-span-4 lg:h-[280px]">
+            <div className="lg:col-span-5 xl:col-span-4 lg:self-start">
               <div className="lg:sticky lg:top-6 overflow-hidden rounded-[20px] border border-[#E5E2E0] bg-white shadow-[0_6px_20px_rgba(0,0,0,0.04)] p-2 h-[240px] lg:h-[280px]">
                 {activeOption && (
                   <CommuterRouteMap
@@ -690,6 +689,7 @@ export function CommuterOptionsCard({
               </div>
             </div>
           </div>
+
         ) : (
           /* Empty State yang Rapi & Indah */
           <div className="flex flex-col items-center justify-center rounded-[24px] border border-dashed border-[#D1CDC7] bg-[#FCFBFA] py-12 px-6 text-center">

@@ -41,6 +41,8 @@
 }
 
 html {
+  /* Scale UI to ~94% so desktop users see full page at first glance */
+  font-size: 93.75%;
   background: var(--color-canvas);
   scroll-behavior: smooth;
 }
