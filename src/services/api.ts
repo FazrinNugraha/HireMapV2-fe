@@ -98,5 +98,3 @@ export function getLocationDetail(location: string, category?: string) {
     `/api/spatial/location-detail?${params.toString()}`,
   )
 }
-
-export { API_BASE_URL }

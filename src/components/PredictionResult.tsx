@@ -123,6 +123,24 @@ export function PredictionResult({ prediction }: PredictionResultProps) {
             </div>
           </div>
         </div>
+
+        {/* Catatan peringatan dari backend jika judul tidak valid atau ambigu */}
+        {prediction.adjustment_notes.length > 0 && (
+          <div className="mt-4 rounded-2xl border border-[#ef444420] bg-[#ef444408] p-3.5">
+            <div className="flex items-start gap-2.5">
+              <svg className="mt-0.5 h-4 w-4 shrink-0 text-[#ef4444]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              <ul className="flex flex-col gap-1">
+                {prediction.adjustment_notes.map((note, i) => (
+                  <li key={i} className="text-xs leading-5 text-[#c53030]">{note}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mt-6 border-t border-[#E5E2E0] pt-5">

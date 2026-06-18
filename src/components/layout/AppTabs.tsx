@@ -30,7 +30,7 @@ export function AppTabs({ activeLayer, onChange }: AppTabsProps) {
           type="button"
           onClick={() => onChange('salary')}
         >
-          HireMap
+          HireVision
         </button>
       </div>
 
@@ -46,9 +46,7 @@ export function AppTabs({ activeLayer, onChange }: AppTabsProps) {
         ))}
       </div>
 
-      <div className="hidden h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#141413] text-[10px] font-bold tracking-wider text-[#F3F0EE] md:flex">
-        HM
-      </div>
+      <div className="hidden w-8 shrink-0 md:block" />
     </nav>
   )
 }
@@ -67,11 +65,10 @@ function TabButton({
 }) {
   return (
     <button
-      className={`shrink-0 cursor-pointer whitespace-nowrap rounded-full px-3 py-1.5 text-[11px] font-bold tracking-[-0.01em] transition-all duration-150 md:px-5 md:py-2 md:text-xs ${
-        isActive
+      className={`shrink-0 cursor-pointer whitespace-nowrap rounded-full px-3 py-1.5 text-[11px] font-bold tracking-[-0.01em] transition-all duration-150 md:px-5 md:py-2 md:text-xs ${isActive
           ? 'bg-[#141413] text-[#F3F0EE] shadow-sm'
           : 'text-[#696969] hover:text-[#141413]'
-      }`}
+        }`}
       type="button"
       onClick={() => onClick(layer)}
     >
