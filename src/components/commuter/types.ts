@@ -11,10 +11,18 @@ export type CommuterOption = {
   lon: number;
 };
 
+export type TrafficSection = {
+  startPointIndex: number;
+  endPointIndex: number;
+  sectionType: string;
+  magnitudeOfDelay: number;
+};
+
 export type RouteInfo = {
   distance: number;
   duration: number;
   coordinates: LatLngTuple[];
+  trafficSections?: TrafficSection[];
   source: "tomtom" | "fallback" | "static"; // "static" = data KRL dari matriks
   biaya?: number;           // hanya diisi untuk mode KRL (estimasi harga tiket)
   trafficDelay?: number;    // delay kemacetan dalam menit (hanya dari TomTom)
@@ -42,6 +50,12 @@ export type TomTomRouteResponse = {
         latitude: number;
         longitude: number;
       }>;
+    }>;
+    sections?: Array<{
+      startPointIndex: number;
+      endPointIndex: number;
+      sectionType: string;
+      magnitudeOfDelay: number;
     }>;
   }>;
 };

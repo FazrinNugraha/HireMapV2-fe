@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, Fragment } from "react";
 import {
   CircleMarker,
   MapContainer,
@@ -48,7 +48,7 @@ export function CommuterRouteMap({
   }, [routes, activeOrigin, destination]);
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-[18px]">
+    <div className="relative h-full w-full overflow-hidden rounded-[40px]">
       <MapContainer
         center={center}
         zoom={10}
@@ -65,23 +65,53 @@ export function CommuterRouteMap({
 
         {routes.map(({ mode, route }) => {
           if (!route) return null;
-          const modeConfig = getModeConfig(mode);
-          const pathOptions: PathOptions = {
-            color: modeConfig.color,
-            weight: mode === "car" ? 4 : 3.5,
-            opacity: 0.82,
-            dashArray:
-              mode === "motor" ? "7 6"
-                : mode === "krl" ? "2 5"
-                  : undefined,
-          };
+          
+          const weight = mode === "car" ? 4.5 : mode === "motor" ? 4 : 3.5;
+          const dashArray = mode === "krl" ? "5 5" : undefined;
+          
+          // 1. Gambar rute dasar secara utuh (Warna Biru / Default)
+          const basePolyline = (
+            <Polyline
+              key={`${mode}-base`}
+              positions={route.coordinates}
+              pathOptions={{
+                color: "#3860BE", // Selalu biru sebagai rute dasar
+                weight,
+                opacity: 0.85,
+                dashArray,
+              }}
+            />
+          );
+
+          // 2. Jika ada segmen macet dari TomTom, gambar garis merah menimpa di atas rute dasar
+          const trafficPolylines = route.trafficSections && mode !== "krl"
+            ? route.trafficSections
+                .filter((section) => section.magnitudeOfDelay >= 2) // Hanya gambar overlay untuk bagian yang macet
+                .map((section, idx) => {
+                  const segmentCoords = route.coordinates.slice(
+                    section.startPointIndex,
+                    Math.min(section.endPointIndex + 1, route.coordinates.length)
+                  );
+                  return (
+                    <Polyline
+                      key={`${mode}-traffic-${idx}`}
+                      positions={segmentCoords}
+                      pathOptions={{
+                        color: "#ef4444", // Merah
+                        weight: weight + 0.5, // Sedikit lebih tebal agar menutupi garis base dengan sempurna
+                        opacity: 0.95,
+                        dashArray: undefined,
+                      }}
+                    />
+                  );
+                })
+            : null;
 
           return (
-            <Polyline
-              key={mode}
-              positions={route.coordinates}
-              pathOptions={pathOptions}
-            />
+            <Fragment key={mode}>
+              {basePolyline}
+              {trafficPolylines}
+            </Fragment>
           );
         })}
 
@@ -140,15 +170,22 @@ export function CommuterRouteMap({
       </MapContainer>
 
       <div className="pointer-events-none absolute left-3 bottom-3 z-[500] flex gap-1.5 rounded-full border border-[#E5E2E0] bg-white/95 px-2.5 py-1 text-[10px] font-bold text-[#555555] shadow-sm backdrop-blur">
-        {routes.map(({ mode }) => {
-          const modeConfig = getModeConfig(mode);
+        {routes.map(({ mode, route }) => {
+          const isCongested = mode !== "krl" && route.trafficDelay !== undefined && route.trafficDelay >= 2;
+          const statusText = mode === "krl"
+            ? "Lintas KRL (Bebas Macet)"
+            : isCongested
+              ? `Macet (+${route.trafficDelay} mnt)`
+              : "Lancar (Kondisi Normal)";
+          const statusColor = isCongested ? "#ef4444" : "#3860BE";
+
           return (
             <span key={mode} className="inline-flex items-center gap-1.5">
               <span
                 className="h-1.5 w-1.5 rounded-full"
-                style={{ backgroundColor: modeConfig.color }}
+                style={{ backgroundColor: statusColor }}
               />
-              {modeConfig.label}
+              {statusText}
             </span>
           );
         })}

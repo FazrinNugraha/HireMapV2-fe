@@ -23,6 +23,7 @@ export async function fetchTomTomRoute(request: RouteRequest): Promise<RouteInfo
     `&traffic=true` +
     `&travelMode=${travelMode}` +
     `&vehicleEngineType=combustion` +
+    `&sectionType=traffic` +
     `&constantSpeedConsumptionInLitersPerHundredkm=${encodeURIComponent(consumptionCurve)}`;
 
   const response = await fetch(url);
@@ -51,6 +52,9 @@ export async function fetchTomTomRoute(request: RouteRequest): Promise<RouteInfo
     ?? hitungLiterFallback(distanceKm, request.mode === "motor" ? "motor" : "car");
   const fuelCostPerMonth = hitungBiayaBbmPerBulan(literPerTrip);
 
+  // Ambil data segmen kemacetan dari TomTom
+  const trafficSections = route.sections?.filter((s) => s.sectionType === "TRAFFIC");
+
   return {
     distance: distanceKm,
     duration: Math.round(
@@ -62,6 +66,7 @@ export async function fetchTomTomRoute(request: RouteRequest): Promise<RouteInfo
         [request.origin.lat, request.origin.lon],
         [request.destination.lat, request.destination.lon],
       ],
+    trafficSections,
     source: "tomtom",
     trafficDelay: delayMinutes > 0 ? delayMinutes : undefined,
     avgSpeed,
