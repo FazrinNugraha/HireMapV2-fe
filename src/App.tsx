@@ -8,6 +8,7 @@ import {
 } from './constants/defaults'
 import { useMetadata } from './hooks/useMetadata'
 import { AnalysisPage } from './pages/AnalysisPage'
+import { CommuterPage } from './pages/CommuterPage'
 import { ConsultantPage } from './pages/ConsultantPage'
 import { SalaryPage } from './pages/SalaryPage'
 import { SpatialPage } from './pages/SpatialPage'
@@ -150,6 +151,14 @@ export default function App() {
 
       {activeLayer === 'spatial' && (
         <SpatialPage metadata={metadata} prediction={prediction} />
+      )}
+
+      {activeLayer === 'commuter' && (
+        <CommuterPage
+          prediction={prediction}
+          spatialSummary={spatialSummary}
+          onGoToSalary={() => setActiveLayer('salary')}
+        />
       )}
 
       {activeLayer === 'analysis' && (

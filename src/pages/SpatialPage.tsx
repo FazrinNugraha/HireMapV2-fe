@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { CommuterOptionsCard } from "../components/CommuterOptionsCard";
 import { SelectField } from "../components/SelectField";
 import {
   SpatialLeafletMap,
@@ -117,15 +116,6 @@ export function SpatialPage({ metadata, prediction }: SpatialPageProps) {
       />
 
       <RegionalRankingTable summary={summary} stats={stats} />
-
-      {prediction && (
-        <section>
-          <CommuterOptionsCard
-            prediction={prediction}
-            spatialSummary={summary}
-          />
-        </section>
-      )}
     </main>
   );
 }
