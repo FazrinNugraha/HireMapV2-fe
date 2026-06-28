@@ -313,48 +313,63 @@ export function FeasibilityScoreCard({
 
       <div className="p-5 md:p-7">
         {/* Score + Donut row */}
-        <div className="flex flex-col gap-5 border-b border-[#E4E2DC] pb-6 sm:flex-row sm:items-center sm:gap-8">
+        <div className="flex flex-col gap-4 border-b border-[#E4E2DC] pb-5 sm:flex-row sm:items-center sm:gap-6">
           {/* Chart.js Doughnut */}
-          <div
-            className="relative shrink-0 self-center sm:self-auto"
-            style={{ width: 110, height: 110 }}
-          >
+          <div className="relative shrink-0 self-center sm:self-auto" style={{ width: 110, height: 110 }}>
             <Doughnut data={donutData} options={donutOptions} />
             {/* Center overlay */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
               <span
-                className="text-2xl font-bold tracking-tight"
+                className="text-2xl font-black tracking-tight leading-none"
                 style={{ color: grade.color }}
               >
                 {total}
               </span>
-              <span className="text-[10px] font-semibold text-[#696969]">
+              <span className="text-[10px] font-bold text-[#696969] mt-0.5">
                 / 100
               </span>
             </div>
           </div>
 
-          {/* Grade text */}
-          <div className="flex-1">
-            <span
-              className="inline-block rounded-full px-3 py-1 text-xs font-bold animate-pulse"
-              style={{ backgroundColor: grade.bg, color: grade.color }}
-            >
-              {grade.label}
-            </span>
-            <p className="mt-2 text-sm leading-6 text-[#555]">
-              {grade.description}
-            </p>
+          {/* Grade text and action */}
+          <div className="flex-1 flex flex-col gap-3">
+            <div className="flex flex-col gap-1.5">
+              {/* Status Header */}
+              <div className="flex flex-wrap items-center gap-2">
+                <span
+                  className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold shadow-sm"
+                  style={{ backgroundColor: grade.bg, color: grade.color }}
+                >
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: grade.color }}></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ backgroundColor: grade.color }}></span>
+                  </span>
+                  {grade.label}
+                </span>
+                <span className="text-[9px] font-bold text-[#A0A09A] uppercase tracking-wider">
+                  Decision Index
+                </span>
+              </div>
+
+              {/* Description */}
+              <p className="text-sm font-bold text-[#141413] tracking-tight leading-snug sm:text-base">
+                {grade.description}
+              </p>
+            </div>
 
             {/* Trigger AI audit button */}
-            <button
-              type="button"
-              onClick={() => onRequestAudit(auditPrompt)}
-              className="mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-[#141413] px-5 py-2.5 text-xs font-bold text-white transition-all hover:bg-[#AA3700] active:scale-95 sm:w-auto"
-            >
-              <span>AI</span>
-              <span>Minta Audit Detail dari AI</span>
-            </button>
+            <div>
+              <button
+                type="button"
+                onClick={() => onRequestAudit(auditPrompt)}
+                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#141413] to-[#2D2D2A] px-5 py-2.5 text-xs font-extrabold text-white shadow-md transition-all duration-300 hover:from-[#AA3700] hover:to-[#C8521A] hover:shadow-[0_6px_20px_rgba(170,55,0,0.25)] active:scale-95 sm:w-auto"
+              >
+                <svg className="w-5 h-5 text-white animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L18 10l-4.714 1.143L11 18l-2.286-6.857L4 10l4.714-1.143L11 3z" />
+                </svg>
+                <span>Audit dengan AI</span>
+              </button>
+            </div>
           </div>
         </div>
 
