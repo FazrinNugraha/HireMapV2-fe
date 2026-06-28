@@ -9,6 +9,7 @@ import { fetchTomTomRoute } from "./commuter/api";
 import { CommuterRouteMap } from "./commuter/CommuterRouteMap";
 import { CommuterDetailCard } from "./commuter/CommuterDetailCard";
 import { PerformanceDashboard } from "./commuter/PerformanceDashboard";
+import { SelectField } from "./SelectField";
 
 type CommuterOptionsCardProps = {
   prediction: SalaryPredictionResponse;
@@ -169,44 +170,29 @@ export function CommuterOptionsCard({
         {/* Dropdown Filters (Mastercard Pill Style) */}
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Dropdown Kota Asal */}
-          <div className="relative">
-            <select
-              value={selectedOrigin}
-              onChange={(e) => setSelectedOrigin(e.target.value)}
-              className="appearance-none rounded-full border border-[#E5E2E0] bg-white pl-4 pr-10 py-2 text-xs font-bold text-[#141413] shadow-sm outline-none focus:border-[#141413] transition"
-            >
-              {commuterOptions.map((opt) => (
-                <option key={opt.lokasi} value={opt.lokasi}>
-                  Asal: {opt.lokasi}
-                </option>
-              ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-[#555555]">
-              <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </div>
-          </div>
+          <SelectField
+            value={`Asal: ${selectedOrigin}`}
+            options={commuterOptions.map((opt) => `Asal: ${opt.lokasi}`)}
+            onChange={(val) => {
+              const rawCity = val.replace("Asal: ", "");
+              setSelectedOrigin(rawCity);
+            }}
+            variant="outline"
+          />
 
           {/* Dropdown Moda Transportasi */}
-          <div className="relative">
-            <select
-              value={activeMode}
-              onChange={(e) => setActiveMode(e.target.value as ModeKey)}
-              className="appearance-none rounded-full border border-[#E5E2E0] bg-white pl-4 pr-10 py-2 text-xs font-bold text-[#141413] shadow-sm outline-none focus:border-[#141413] transition"
-            >
-              {MODES.map((mode) => (
-                <option key={mode.key} value={mode.key}>
-                  Moda: {mode.label}
-                </option>
-              ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-[#555555]">
-              <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </div>
-          </div>
+          <SelectField
+            value={`Moda: ${MODES.find((m) => m.key === activeMode)?.label || activeMode}`}
+            options={MODES.map((mode) => `Moda: ${mode.label}`)}
+            onChange={(val) => {
+              const label = val.replace("Moda: ", "");
+              const found = MODES.find((m) => m.label === label);
+              if (found) {
+                setActiveMode(found.key);
+              }
+            }}
+            variant="outline"
+          />
         </div>
       </div>
 

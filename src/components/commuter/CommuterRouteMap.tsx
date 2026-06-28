@@ -7,11 +7,10 @@ import {
   Tooltip,
   useMap,
 } from "react-leaflet";
-import type { LatLngExpression, LatLngTuple, PathOptions } from "leaflet";
+import type { LatLngExpression, LatLngTuple } from "leaflet";
 import type { CommuterOption, ModeKey, RouteInfo } from "./types";
 import type { SpatialSummaryItem } from "../../types/api";
 import { TILE_ATTRIBUTION, TILE_URL } from "./constants";
-import { getModeConfig } from "./utils";
 import "leaflet/dist/leaflet.css";
 
 /**

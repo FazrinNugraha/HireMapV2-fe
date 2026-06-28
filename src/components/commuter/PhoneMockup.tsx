@@ -19,7 +19,6 @@ export function PhoneMockup({
   mode,
   route,
   fallbackRoute,
-  savings,
   kosCost,
   targetKosCost,
 }: PhoneMockupProps) {

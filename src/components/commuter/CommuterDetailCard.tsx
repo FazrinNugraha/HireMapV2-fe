@@ -1,5 +1,5 @@
 import type { ModeKey, RouteInfo } from "./types";
-import { getModeConfig, hitungLiterFallback, hitungBiayaBbmPerBulan } from "./utils";
+import { hitungLiterFallback, hitungBiayaBbmPerBulan } from "./utils";
 import { formatRupiah } from "../../utils/format";
 
 type CommuterDetailCardProps = {
@@ -19,13 +19,10 @@ export function CommuterDetailCard({
   mode,
   route,
   fallbackRoute,
-  savings,
   kosCost,
   targetKosCost,
 }: CommuterDetailCardProps) {
   const activeRoute = route ?? fallbackRoute;
-  const modeConfig = getModeConfig(mode);
-  const isLoading = !route;
 
   // Hitung biaya transport bulanan
   const transportCost = mode === "krl"
