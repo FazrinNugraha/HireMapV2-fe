@@ -105,18 +105,17 @@ export function ActiveCareerContext({
       </section>
 
       {/* Negotiation tip card */}
-      <section className="shrink-0 rounded-[32px] bg-[#141413] p-6 text-white">
-        <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.04em] text-white/40">
-          <span className="text-base leading-none text-[#F37338]">•</span>
+      <section className="shrink-0 rounded-[32px] bg-[#FFF8F5] border-2 border-[#F37338] p-6 shadow-sm">
+        <p className="flex items-center gap-1.5 text-xs font-black uppercase tracking-[0.05em] text-[#F37338]">
+          <span className="text-lg leading-none text-[#F37338]">•</span>
           Negotiation Insight
         </p>
-        <p className="mt-3 text-sm leading-6 text-white/70">
+        <p className="mt-3 text-sm font-semibold leading-6 text-[#141413]">
           Confidence level prediksi:{" "}
-          <strong className="text-white">{prediction.confidence_label}</strong>.
+          <strong className="text-[#F37338] font-extrabold">{prediction.confidence_label}</strong>.
           Gunakan range{" "}
-          <strong className="text-white">
-            {formatRupiah(prediction.gaji_min)}-
-            {formatRupiah(prediction.gaji_max)}
+          <strong className="text-[#F37338] font-extrabold">
+            {formatRupiah(prediction.gaji_min)} - {formatRupiah(prediction.gaji_max)}
           </strong>{" "}
           sebagai anchor negosiasi.
         </p>

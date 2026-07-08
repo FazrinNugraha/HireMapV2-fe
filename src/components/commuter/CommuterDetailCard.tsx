@@ -104,17 +104,24 @@ export function CommuterDetailCard({
       </div>
 
       {/* Decision Card (Savings/Budget Info) */}
-      <div className="mt-5 rounded-[24px] bg-[#141413] p-5 text-white flex flex-col gap-1 shadow-md relative overflow-hidden">
-        {/* Decorative background line */}
-        <div className="absolute top-0 right-0 h-full w-24 bg-white/[0.03] -skew-x-12 translate-x-8 pointer-events-none" />
-
-        <span className="text-[10px] text-white/60 font-semibold uppercase tracking-wider">
+      <div className={`mt-5 rounded-[24px] p-5 border flex flex-col gap-1 shadow-sm relative overflow-hidden ${
+        netSavings >= 0
+          ? "bg-[#EFFDF5] border-[#A7F3D0]"
+          : "bg-[#FFF5F5] border-[#FECACA]"
+      }`}>
+        <span className={`text-[10px] font-bold uppercase tracking-wider ${
+          netSavings >= 0 ? "text-[#047857]" : "text-[#B91C1C]"
+        }`}>
           {netSavings >= 0 ? "Potential Monthly Savings" : "Additional Budget Needed"}
         </span>
-        <div className={`text-xl font-black tracking-tight ${netSavings >= 0 ? "text-[#10b981]" : "text-[#ef4444]"}`}>
+        <div className={`text-xl font-black tracking-tight ${
+          netSavings >= 0 ? "text-[#065F46]" : "text-[#991B1B]"
+        }`}>
           {netSavings >= 0 ? `Hemat ${formatRupiah(netSavings)}` : `Lebih mahal ${formatRupiah(Math.abs(netSavings))}`}
         </div>
-        <span className="text-[9px] text-white/40 italic mt-1 block">
+        <span className={`text-[9px] italic mt-1 block ${
+          netSavings >= 0 ? "text-[#047857]/70" : "text-[#B91C1C]/70"
+        }`}>
           *dibanding sewa kos di dekat kantor ({formatRupiah(targetKosCost)})
         </span>
       </div>
