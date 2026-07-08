@@ -21,10 +21,13 @@ const ALL_INDUSTRIES = "All Industries";
 type SpatialPageProps = {
   metadata: MetadataResponse | null;
   prediction: SalaryPredictionResponse | null;
+  onGoToSalary: () => void;
+  onPrevStep: () => void;
+  onNextStep: () => void;
 };
 
 // Halaman peta: membandingkan peluang kerja, lokasi, dan opsi komuter.
-export function SpatialPage({ metadata, prediction }: SpatialPageProps) {
+export function SpatialPage({ metadata, prediction, onGoToSalary, onPrevStep, onNextStep }: SpatialPageProps) {
   const [summary, setSummary] = useState<SpatialSummaryItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState(
     prediction?.kategori ?? ALL_INDUSTRIES,
@@ -91,7 +94,20 @@ export function SpatialPage({ metadata, prediction }: SpatialPageProps) {
 
   return (
     <main className="page-shell flex flex-col gap-6 md:gap-8">
-      <SpatialHeader />
+      <SpatialHeader onPrevStep={onPrevStep} onNextStep={onNextStep} isNextDisabled={!prediction} />
+
+      {!prediction && (
+        <div className="rounded-[24px] border border-[#E5E2E0] bg-white p-5 text-xs text-[#696969] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-sm md:rounded-[32px] md:p-6">
+          <span>Isi data karir di menu Salary Prediction untuk mempersonalisasi peta ini ke profil Anda.</span>
+          <button
+            type="button"
+            onClick={onGoToSalary}
+            className="cursor-pointer text-xs font-bold text-[#F37338] hover:text-[#CF4500] transition-colors self-start sm:self-auto shrink-0"
+          >
+            Mulai Prediksi &rarr;
+          </button>
+        </div>
+      )}
 
       <SpatialFilterBar
         categories={metadata?.categories ?? []}
@@ -121,15 +137,43 @@ export function SpatialPage({ metadata, prediction }: SpatialPageProps) {
 }
 
 // Header halaman Spatial Map.
-function SpatialHeader() {
+function SpatialHeader({
+  onPrevStep,
+  onNextStep,
+  isNextDisabled,
+}: {
+  onPrevStep: () => void;
+  onNextStep: () => void;
+  isNextDisabled: boolean;
+}) {
   return (
-    <section>
-      <h1 className="page-title">
-        Spatial Career Map
-      </h1>
-      <p className="page-description">
-        Bandingkan peluang kerja dan biaya hidup di seluruh Jabodetabek.
-      </p>
+    <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 className="page-title">
+          Spatial Career Map
+        </h1>
+        <p className="page-description">
+          Bandingkan peluang kerja dan biaya hidup di seluruh Jabodetabek.
+        </p>
+      </div>
+
+      <div className="flex items-center gap-3 shrink-0 self-start sm:self-auto">
+        <button
+          type="button"
+          onClick={onPrevStep}
+          className="cursor-pointer inline-flex items-center gap-2 rounded-full border border-[#E5E2E0] bg-white px-4 py-2 text-xs font-bold text-[#696969] hover:text-[#141413] transition-all active:scale-95"
+        >
+          &lt; Sebelumnya
+        </button>
+        <button
+          type="button"
+          onClick={onNextStep}
+          disabled={isNextDisabled}
+          className="cursor-pointer inline-flex items-center gap-2 rounded-full bg-[#141413] hover:bg-[#F37338] px-5 py-2 text-xs font-bold text-white transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[#141413]"
+        >
+          Selanjutnya &gt;
+        </button>
+      </div>
     </section>
   );
 }

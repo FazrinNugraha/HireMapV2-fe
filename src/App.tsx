@@ -10,6 +10,8 @@ import { useMetadata } from './hooks/useMetadata'
 import { AnalysisPage } from './pages/AnalysisPage'
 import { CommuterPage } from './pages/CommuterPage'
 import { ConsultantPage } from './pages/ConsultantPage'
+import { JourneyPage } from './pages/JourneyPage'
+import { LandingPage } from './pages/landing/LandingPage'
 import { SalaryPage } from './pages/SalaryPage'
 import { SpatialPage } from './pages/SpatialPage'
 import { getSpatialSummary, predictSalary, sendAiChat } from './services/api'
@@ -36,6 +38,7 @@ const INITIAL_LOADING_STATE: LoadingState = {
 
 // Root aplikasi: menyimpan state global yang dipakai lintas tab.
 export default function App() {
+  const [showLanding, setShowLanding] = useState(true)
   const [activeLayer, setActiveLayer] = useState<AppLayer>('salary')
   const [form, setForm] = useState<SalaryPredictionRequest>(DEFAULT_SALARY_FORM)
   const [prediction, setPrediction] = useState<SalaryPredictionResponse | null>(null)
@@ -131,8 +134,17 @@ export default function App() {
     setLoading((current) => ({ ...current, [key]: value }))
   }
 
+  if (showLanding) {
+    return <LandingPage onStart={() => setShowLanding(false)} />
+  }
+
   return (
-    <AppShell activeLayer={activeLayer} onLayerChange={setActiveLayer}>
+    <AppShell
+      activeLayer={activeLayer}
+      onLayerChange={setActiveLayer}
+      onGoHome={() => setShowLanding(true)}
+      hasPrediction={prediction !== null}
+    >
       <div className="mx-auto w-full max-w-[1280px] px-5 md:px-10">
         <ErrorBanner message={visibleError} />
       </div>
@@ -146,11 +158,27 @@ export default function App() {
           isPredicting={loading.prediction}
           onFormChange={setForm}
           onPredict={handlePredict}
+          onNextStep={() => setActiveLayer('spatial')}
         />
       )}
 
       {activeLayer === 'spatial' && (
-        <SpatialPage metadata={metadata} prediction={prediction} />
+        <SpatialPage
+          metadata={metadata}
+          prediction={prediction}
+          onGoToSalary={() => setActiveLayer('salary')}
+          onPrevStep={() => setActiveLayer('salary')}
+          onNextStep={() => setActiveLayer('journey')}
+        />
+      )}
+
+      {activeLayer === 'journey' && (
+        <JourneyPage
+          prediction={prediction}
+          onGoToSalary={() => setActiveLayer('salary')}
+          onPrevStep={() => setActiveLayer('spatial')}
+          onNextStep={() => setActiveLayer('commuter')}
+        />
       )}
 
       {activeLayer === 'commuter' && (
@@ -158,6 +186,8 @@ export default function App() {
           prediction={prediction}
           spatialSummary={spatialSummary}
           onGoToSalary={() => setActiveLayer('salary')}
+          onPrevStep={() => setActiveLayer('journey')}
+          onNextStep={() => setActiveLayer('analysis')}
         />
       )}
 
@@ -166,6 +196,8 @@ export default function App() {
           prediction={prediction}
           spatialSummary={spatialSummary}
           onGoToSalary={() => setActiveLayer('salary')}
+          onPrevStep={() => setActiveLayer('commuter')}
+          onNextStep={() => setActiveLayer('consultant')}
           onRequestAudit={handleRequestAudit}
         />
       )}
@@ -177,6 +209,7 @@ export default function App() {
           chatHistory={chatHistory}
           isChatLoading={loading.chat}
           onGoToSalary={() => setActiveLayer('salary')}
+          onPrevStep={() => setActiveLayer('analysis')}
           onChatInputChange={setChatInput}
           onQuickQuestion={setChatInput}
           onChatSubmit={handleChat}

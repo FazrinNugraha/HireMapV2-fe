@@ -5,22 +5,46 @@ type CommuterPageProps = {
   prediction: SalaryPredictionResponse | null;
   spatialSummary: SpatialSummaryItem[];
   onGoToSalary: () => void;
+  onPrevStep: () => void;
+  onNextStep: () => void;
 };
 
 export function CommuterPage({
   prediction,
   spatialSummary,
   onGoToSalary,
+  onPrevStep,
+  onNextStep,
 }: CommuterPageProps) {
   return (
     <main className="page-shell flex flex-col gap-6 md:gap-8">
-      <section>
-        <h1 className="page-title">
-          Commuter Simulator
-        </h1>
-        <p className="page-description">
-          Hitung jarak, waktu tempuh, dan biaya komuter harian dari lokasi kos ke tempat kerja.
-        </p>
+      <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="page-title">
+            Commuter Simulator
+          </h1>
+          <p className="page-description">
+            Hitung jarak, waktu tempuh, dan biaya komuter harian dari lokasi kos ke tempat kerja.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 shrink-0 self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={onPrevStep}
+            className="cursor-pointer inline-flex items-center gap-2 rounded-full border border-[#E5E2E0] bg-white px-4 py-2 text-xs font-bold text-[#696969] hover:text-[#141413] transition-all active:scale-95"
+          >
+            &lt; Sebelumnya
+          </button>
+          <button
+            type="button"
+            onClick={onNextStep}
+            disabled={!prediction}
+            className="cursor-pointer inline-flex items-center gap-2 rounded-full bg-[#141413] hover:bg-[#F37338] px-5 py-2 text-xs font-bold text-white transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            Selanjutnya &gt;
+          </button>
+        </div>
       </section>
 
       {prediction ? (

@@ -16,6 +16,7 @@ type SalaryPageProps = {
   isPredicting: boolean;
   onFormChange: (form: SalaryPredictionRequest) => void;
   onPredict: (event: FormEvent<HTMLFormElement>) => void;
+  onNextStep: () => void;
 };
 
 // Halaman utama untuk input faktor gaji dan membaca hasil prediksi.
@@ -27,6 +28,7 @@ export function SalaryPage({
   isPredicting,
   onFormChange,
   onPredict,
+  onNextStep,
 }: SalaryPageProps) {
   const [revealKey, setRevealKey] = useState(0);
   const prevPrediction = useRef<SalaryPredictionResponse | null>(null);
@@ -41,7 +43,7 @@ export function SalaryPage({
 
   return (
     <main className="page-shell grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-12">
-      <SalaryHeader />
+      <SalaryHeader prediction={prediction} onNextStep={onNextStep} />
 
       <section className="col-span-1 flex flex-col lg:col-span-5">
         <PredictionForm
@@ -68,17 +70,37 @@ export function SalaryPage({
 }
 
 // Header singkat agar tujuan tab Salary Prediction langsung jelas.
-function SalaryHeader() {
+function SalaryHeader({
+  prediction,
+  onNextStep,
+}: {
+  prediction: SalaryPredictionResponse | null;
+  onNextStep: () => void;
+}) {
   return (
-    <header className="col-span-1 lg:col-span-12">
-      <p className="eyebrow">Interactive Calculator</p>
-      <h1 className="page-title mt-2">
-        Salary Predictor &amp; Decision Support System
-      </h1>
-      <p className="page-description">
-        Hitung estimasi gaji pasar yang kompetitif dan dapatkan rekomendasi
-        keputusan karir &amp; finansial di Jabodetabek.
-      </p>
+    <header className="col-span-1 lg:col-span-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p className="eyebrow">Interactive Calculator</p>
+        <h1 className="page-title mt-2">
+          Salary Predictor &amp; Decision Support System
+        </h1>
+        <p className="page-description">
+          Hitung estimasi gaji pasar yang kompetitif dan dapatkan rekomendasi
+          keputusan karir &amp; finansial di Jabodetabek.
+        </p>
+      </div>
+
+      {prediction && (
+        <div className="flex items-center gap-3 shrink-0 self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={onNextStep}
+            className="cursor-pointer inline-flex items-center gap-2 rounded-full bg-[#141413] hover:bg-[#F37338] px-5 py-2 text-xs font-bold text-white transition-all active:scale-95"
+          >
+            Selanjutnya &gt;
+          </button>
+        </div>
+      )}
     </header>
   );
 }
