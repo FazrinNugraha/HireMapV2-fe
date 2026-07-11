@@ -17,6 +17,28 @@ export function LandingNavbar({ isScrolled, onStart }: LandingNavbarProps) {
         <span className="text-[18px] font-extrabold tracking-tight text-[#141413]">HireVision</span>
       </div>
 
+      <div className="hidden md:flex items-center gap-7">
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="landing-nav-link"
+        >
+          Beranda
+        </button>
+        <a
+          href="#features"
+          className="landing-nav-link"
+        >
+          Fitur
+        </a>
+        <a
+          href="#eksplorasi"
+          className="landing-nav-link"
+        >
+          Eksplorasi
+        </a>
+      </div>
+
       <button onClick={onStart} className="landing-nav-login-btn">
         Masuk
       </button>

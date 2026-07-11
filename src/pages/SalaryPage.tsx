@@ -81,13 +81,12 @@ function SalaryHeader({
   return (
     <header className="col-span-1 lg:col-span-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <p className="eyebrow">Interactive Calculator</p>
+        <p className="eyebrow">Interactive Simulator</p>
         <h1 className="page-title mt-2">
-          Salary Predictor &amp; Decision Support System
+          Simulator Gaji Pasar &amp; Evaluasi Karir
         </h1>
         <p className="page-description">
-          Hitung estimasi gaji pasar yang kompetitif dan dapatkan rekomendasi
-          keputusan karir &amp; finansial di Jabodetabek.
+          Petakan parameter kualifikasi Anda untuk mensimulasikan proyeksi pendapatan yang realistis berdasarkan tren data riil pasar kerja Jabodetabek
         </p>
       </div>
 

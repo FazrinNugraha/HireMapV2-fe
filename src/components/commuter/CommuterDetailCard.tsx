@@ -40,7 +40,7 @@ export function CommuterDetailCard({
       <div>
         <div className="flex items-center justify-between pb-3 border-b border-[#E5E2E0]/60 mb-4">
           <span className="text-xs font-bold uppercase tracking-wider text-[#696969]">
-            Trip Summary
+            Ringkasan Perjalanan Komuter
           </span>
           <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-bold ${
             mode === "krl" 
@@ -77,7 +77,7 @@ export function CommuterDetailCard({
         {/* Expenses List */}
         <div className="flex flex-col gap-2">
           <span className="text-xs font-bold uppercase tracking-wider text-[#696969]">
-            Monthly Expense Details
+            Pengeluaran Bulanan (Kos + Transport)
           </span>
 
           <div className="rounded-2xl border border-[#E5E2E0]/60 p-4 flex flex-col gap-3.5 bg-white">
@@ -112,7 +112,7 @@ export function CommuterDetailCard({
         <span className={`text-[10px] font-bold uppercase tracking-wider ${
           netSavings >= 0 ? "text-[#047857]" : "text-[#B91C1C]"
         }`}>
-          {netSavings >= 0 ? "Potential Monthly Savings" : "Additional Budget Needed"}
+          {netSavings >= 0 ? "Peluang Hemat Bulanan" : "Ekstra Biaya Bulanan"}
         </span>
         <div className={`text-xl font-black tracking-tight ${
           netSavings >= 0 ? "text-[#065F46]" : "text-[#991B1B]"

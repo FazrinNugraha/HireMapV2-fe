@@ -60,11 +60,11 @@ export function PerformanceDashboard({
         <table className="w-full border-collapse text-left">
           <thead>
             <tr className="border-b border-[#E5E2E0] text-[11px] font-extrabold uppercase tracking-[0.06em] text-[#696969]">
-              <th className="pb-3 pr-3">Trip Condition</th>
-              <th className="pb-3 px-3">Distance</th>
-              <th className="pb-3 px-3">Duration</th>
-              <th className="pb-3 px-3">Avg Speed</th>
-              <th className="pb-3 px-3">{mode === "krl" ? "Ticket Price" : "Fuel Cost/Month"}</th>
+              <th className="pb-3 pr-3">Kondisi Perjalanan</th>
+              <th className="pb-3 px-3">Jarak Tempuh</th>
+              <th className="pb-3 px-3">Waktu Tempuh</th>
+              <th className="pb-3 px-3">Kecepatan rata-rata</th>
+              <th className="pb-3 px-3">{mode === "krl" ? "Harga Ticket" : "Biaya BBM"}</th>
               <th className="pb-3 pl-3">Status</th>
             </tr>
           </thead>

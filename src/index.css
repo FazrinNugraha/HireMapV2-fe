@@ -324,28 +324,38 @@ video {
   display: inline-flex;
   align-items: center;
   font-size: 15.5px;
-  font-weight: 600;
+  font-weight: 800;
   color: #141413;
   letter-spacing: -0.015em;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
   position: relative;
   cursor: pointer;
   text-decoration: none;
   background: transparent;
   border: none;
-  padding: 6px 16px;
-  border-radius: 8px;
+  padding: 4px 0;
   white-space: nowrap;
 }
 
 .landing-nav-link:hover {
   color: var(--color-orange-light);
-  background-color: rgba(243, 115, 56, 0.05);
 }
 
-/* Remove old underline pseudo-element */
 .landing-nav-link::after {
-  display: none;
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-orange-light);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.landing-nav-link:hover::after {
+  transform: scaleX(1);
 }
 
 .landing-nav-login-btn {

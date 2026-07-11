@@ -1,5 +1,5 @@
 export const heroChecklistItems = [
-  'Prediksi Gaji Berbasis AI',
+  'Prediksi Gaji dan Hunian',
   'Analisis Spasial Real-Time',
   'Konsultasi Karir Cerdas',
 ] as const
@@ -7,15 +7,15 @@ export const heroChecklistItems = [
 export const featureSteps = [
   {
     title: 'Salary Prediction',
-    description: 'Hitung estimasi gaji berdasarkan posisi & kualifikasi Anda.',
+    description: 'Hitung estimasi gaji berdasarkan profil kandidat',
   },
   {
     title: 'Spatial Map',
-    description: 'Petakan sebaran pasar kerja & biaya hunian wilayah Jabodetabek.',
+    description: 'Visualisasi pasar kerja & biaya hunian wilayah Jabodetabek.',
   },
   {
     title: 'Commuter Simulator',
-    description: 'Simulasikan rute komuter, durasi, & estimasi ongkos bulanan.',
+    description: 'Simulasikan rute komuter, durasi, & estimasi biayanya.',
   },
   {
     title: 'Career Analytics',
@@ -23,7 +23,7 @@ export const featureSteps = [
   },
   {
     title: 'AI Consultant',
-    description: 'Konsultasi karir interaktif bersama asisten pintar berbasis AI.',
+    description: 'Konsultasi karir interaktif berbasis AI.',
   },
 ] as const
 

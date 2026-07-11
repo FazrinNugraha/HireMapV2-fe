@@ -11,14 +11,13 @@ export function LandingHero({ onStart }: LandingHeroProps) {
       <div className="landing-hero-orb-2" />
 
       <div className="relative z-10 max-w-[920px] mx-auto flex flex-col items-center gap-4">
-        <h1 className="w-full text-[clamp(3rem,7.2vw,5.5rem)] font-extrabold tracking-[-0.045em] leading-[1.02] text-[#141413]">
-          Navigasi Karir &amp; Gaji Ideal,
-          <br />
-          <span className="text-[#F37338]">Data-Driven. Presisi.</span>
+        <h1 className="w-full text-[clamp(2.6rem,6.2vw,4.3rem)] font-extrabold tracking-[-0.045em] leading-[1.04] text-[#141413]">
+          <span className="block md:whitespace-nowrap">Sistem Pendukung Keputusan untuk</span>
+          <span className="block text-[#F37338] md:whitespace-nowrap">Optimasi Karir Jabodetabek.</span>
         </h1>
 
         <p className="max-w-[680px] text-[clamp(1rem,1.5vw,1.2rem)] leading-[1.55] text-[#696969] font-normal mt-1">
-          Prediksi gaji pasar kompetitif, petakan lokasi industri di Jabodetabek, simulasikan rute komuter harian, dan konsultasikan karir Anda bersama AI expert — semuanya dalam satu platform.
+          Platform data-driven dan peta interaktif untuk membantu Anda mengambil keputusan karir terbaik di wilayah Jabodetabek. Validasi tawaran kerja Anda lewat integrasi prediksi gaji pasar, estimasi biaya hunian, serta simulasi rute komuter secara real-time
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-3 mt-2">
