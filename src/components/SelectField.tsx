@@ -113,7 +113,9 @@ export function SelectField({
         {isOpen && (
           <div
             className={`absolute z-[2000] mt-1.5 max-h-60 overflow-y-auto rounded-[24px] border border-[#E5E2E0] bg-white p-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.08)] animate-fade-slide-down ${
-              variant === "form" ? "w-full left-0" : "left-0 right-0 min-w-full sm:left-auto sm:min-w-[220px]"
+              variant === "form"
+                ? "w-full left-0"
+                : "left-0 right-0 min-w-full sm:left-auto sm:min-w-[220px]"
             }`}
           >
             {options.map((option) => {
@@ -133,7 +135,9 @@ export function SelectField({
                       : "text-[#555555] hover:bg-[#FCFBFA] hover:text-[#141413]"
                   }`}
                 >
-                  <span className="whitespace-normal break-words text-left flex-1">{option}</span>
+                  <span className="whitespace-normal break-words text-left flex-1">
+                    {option}
+                  </span>
                   {isSelected && (
                     <span className="text-[#10b981] shrink-0 font-bold">
                       <svg

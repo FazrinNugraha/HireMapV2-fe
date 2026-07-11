@@ -315,7 +315,10 @@ export function FeasibilityScoreCard({
         {/* Score + Donut row */}
         <div className="flex flex-col gap-4 border-b border-[#E4E2DC] pb-5 sm:flex-row sm:items-center sm:gap-6">
           {/* Chart.js Doughnut */}
-          <div className="relative shrink-0 self-center sm:self-auto" style={{ width: 110, height: 110 }}>
+          <div
+            className="relative shrink-0 self-center sm:self-auto"
+            style={{ width: 110, height: 110 }}
+          >
             <Doughnut data={donutData} options={donutOptions} />
             {/* Center overlay */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
@@ -341,8 +344,14 @@ export function FeasibilityScoreCard({
                   style={{ backgroundColor: grade.bg, color: grade.color }}
                 >
                   <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: grade.color }}></span>
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ backgroundColor: grade.color }}></span>
+                    <span
+                      className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                      style={{ backgroundColor: grade.color }}
+                    ></span>
+                    <span
+                      className="relative inline-flex rounded-full h-1.5 w-1.5"
+                      style={{ backgroundColor: grade.color }}
+                    ></span>
                   </span>
                   {grade.label}
                 </span>
@@ -364,8 +373,18 @@ export function FeasibilityScoreCard({
                 onClick={() => onRequestAudit(auditPrompt)}
                 className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#141413] to-[#2D2D2A] px-5 py-2.5 text-xs font-extrabold text-white shadow-md transition-all duration-300 hover:from-[#AA3700] hover:to-[#C8521A] hover:shadow-[0_6px_20px_rgba(170,55,0,0.25)] active:scale-95 sm:w-auto"
               >
-                <svg className="w-5 h-5 text-white animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L18 10l-4.714 1.143L11 18l-2.286-6.857L4 10l4.714-1.143L11 3z" />
+                <svg
+                  className="w-5 h-5 text-white animate-pulse"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L18 10l-4.714 1.143L11 18l-2.286-6.857L4 10l4.714-1.143L11 3z"
+                  />
                 </svg>
                 <span>Audit dengan AI</span>
               </button>
@@ -485,9 +504,9 @@ export function FeasibilityScoreCard({
 
         {/* Data source note */}
         <p className="mt-6 text-[11px] leading-5 text-[#A0A09A] border-t border-[#E4E2DC] pt-4">
-          Skor dihitung dinamis menggunakan model spasial terintegrasi
-          (formula Haversine untuk commute, regresi housing untuk kos, koreksi
-          ML untuk gaji, dan probabilitas ambiguitas data).
+          Skor dihitung dinamis menggunakan model spasial terintegrasi (formula
+          Haversine untuk commute, regresi housing untuk kos, koreksi ML untuk
+          gaji, dan probabilitas ambiguitas data).
         </p>
       </div>
     </div>

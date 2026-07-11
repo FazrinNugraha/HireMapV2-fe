@@ -1,9 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FeatureHeader } from "./FeatureHeader";
-import type { SalaryPredictionResponse, SpatialSummaryItem } from "../types/api";
+import type {
+  SalaryPredictionResponse,
+  SpatialSummaryItem,
+} from "../types/api";
 import { getKrlRoute } from "../constants/krl-data";
-import type { CommuterOption, ModeKey, RouteInfo, RouteRequest } from "./commuter/types";
-import { getRouteKey, calculateDistance, buildFallbackRoute } from "./commuter/utils";
+import type {
+  CommuterOption,
+  ModeKey,
+  RouteInfo,
+  RouteRequest,
+} from "./commuter/types";
+import {
+  getRouteKey,
+  calculateDistance,
+  buildFallbackRoute,
+} from "./commuter/utils";
 import { MODES } from "./commuter/constants";
 import { fetchTomTomRoute } from "./commuter/api";
 import { CommuterRouteMap } from "./commuter/CommuterRouteMap";
@@ -58,7 +70,7 @@ export function CommuterOptionsCard({
 
   // State untuk kota asal aktif dan moda transportasi aktif
   const [selectedOrigin, setSelectedOrigin] = useState<string>(
-    commuterOptions[0]?.lokasi || ""
+    commuterOptions[0]?.lokasi || "",
   );
   const [activeMode, setActiveMode] = useState<ModeKey>("motor");
 
@@ -68,7 +80,11 @@ export function CommuterOptionsCard({
 
   // Sinkronisasi kota asal jika list berubah
   useEffect(() => {
-    if (commuterOptions.length > 0 && (!selectedOrigin || !commuterOptions.some(opt => opt.lokasi === selectedOrigin))) {
+    if (
+      commuterOptions.length > 0 &&
+      (!selectedOrigin ||
+        !commuterOptions.some((opt) => opt.lokasi === selectedOrigin))
+    ) {
       setSelectedOrigin(commuterOptions[0].lokasi);
     }
   }, [commuterOptions, selectedOrigin]);
@@ -82,7 +98,11 @@ export function CommuterOptionsCard({
   const routeRequest = useMemo<RouteRequest | null>(() => {
     if (!targetLocation || !activeOption) return null;
     return {
-      key: getRouteKey(activeOption.lokasi, targetLocation.Lokasi_Clean, activeMode),
+      key: getRouteKey(
+        activeOption.lokasi,
+        targetLocation.Lokasi_Clean,
+        activeMode,
+      ),
       mode: activeMode,
       origin: activeOption,
       destination: targetLocation,
@@ -109,26 +129,37 @@ export function CommuterOptionsCard({
       );
       const route: RouteInfo = krlData
         ? {
-          distance: krlData.jarak,
-          duration: krlData.waktu,
-          coordinates: [
-            [routeRequest.origin.lat, routeRequest.origin.lon],
-            [routeRequest.destination.lat, routeRequest.destination.lon],
-          ],
-          source: "static",
-          biaya: krlData.biaya,
-        }
-        : buildFallbackRoute(routeRequest.origin, routeRequest.destination, "krl");
+            distance: krlData.jarak,
+            duration: krlData.waktu,
+            coordinates: [
+              [routeRequest.origin.lat, routeRequest.origin.lon],
+              [routeRequest.destination.lat, routeRequest.destination.lon],
+            ],
+            source: "static",
+            biaya: krlData.biaya,
+          }
+        : buildFallbackRoute(
+            routeRequest.origin,
+            routeRequest.destination,
+            "krl",
+          );
 
       setRouteCache((current) => ({ ...current, [routeRequest.key]: route }));
     } else {
       // ── Mobil & Motor dari TomTom ──
       fetchTomTomRoute(routeRequest)
         .catch(() =>
-          buildFallbackRoute(routeRequest.origin, routeRequest.destination, routeRequest.mode),
+          buildFallbackRoute(
+            routeRequest.origin,
+            routeRequest.destination,
+            routeRequest.mode,
+          ),
         )
         .then((route) => {
-          setRouteCache((current) => ({ ...current, [routeRequest.key]: route }));
+          setRouteCache((current) => ({
+            ...current,
+            [routeRequest.key]: route,
+          }));
         });
     }
   }, [routeCache, routeRequest]);
@@ -136,19 +167,26 @@ export function CommuterOptionsCard({
   // Rute aktif terpilih untuk peta
   const activeRoutesForMap = useMemo(() => {
     if (!activeOption || !targetLocation || !routeRequest) return [];
-    
+
     return [
       {
         mode: activeMode,
-        route: routeCache[routeRequest.key] || buildFallbackRoute(activeOption, targetLocation, activeMode),
-      }
+        route:
+          routeCache[routeRequest.key] ||
+          buildFallbackRoute(activeOption, targetLocation, activeMode),
+      },
     ];
   }, [activeOption, targetLocation, routeRequest, routeCache, activeMode]);
 
-  if (!targetLocation || spatialSummary.length === 0 || !activeOption) return null;
+  if (!targetLocation || spatialSummary.length === 0 || !activeOption)
+    return null;
 
   const currentRoute = routeRequest ? routeCache[routeRequest.key] : undefined;
-  const fallbackRoute = buildFallbackRoute(activeOption, targetLocation, activeMode);
+  const fallbackRoute = buildFallbackRoute(
+    activeOption,
+    targetLocation,
+    activeMode,
+  );
 
   return (
     <div className="animate-fade-slide-down rounded-[40px] border border-[#E5E2E0] bg-[#FCFBFA] p-4 shadow-[rgba(0,0,0,0.06)_0px_8px_30px] md:p-6">
@@ -206,11 +244,11 @@ export function CommuterOptionsCard({
               destination={targetLocation}
               activeOrigin={activeOption}
               routes={activeRoutesForMap}
-              allSelectedOrigins={commuterOptions.filter(opt => opt.lokasi === selectedOrigin)}
+              allSelectedOrigins={commuterOptions.filter(
+                (opt) => opt.lokasi === selectedOrigin,
+              )}
               onSelectActiveOrigin={setSelectedOrigin}
             />
-
-
           </div>
 
           {/* Performance Dashboard Table */}
