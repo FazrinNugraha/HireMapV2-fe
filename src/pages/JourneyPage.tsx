@@ -1,4 +1,4 @@
-import { type FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CareerJourneyChart } from "../components/CareerJourneyChart";
 import type {
   SalaryPredictionResponse,
