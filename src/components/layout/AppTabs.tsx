@@ -28,7 +28,12 @@ export function AppTabs({ activeLayer, onGoHome, hasPrediction = false }: AppTab
 
   return (
     <nav className={getNavClassName(isScrolled)}>
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex items-center gap-2.5 shrink-0">
+        <img
+          src="/logo_virevision_transparent.png"
+          alt="HireVision Logo"
+          className="h-8 w-8 shrink-0 object-contain filter-[invert(50%)_sepia(90%)_saturate(500%)_hue-rotate(345deg)_brightness(100%)_contrast(100%)]"
+        />
         <button
           className="cursor-pointer text-base font-extrabold tracking-[-0.03em] text-[#141413] transition-opacity hover:opacity-70"
           type="button"
@@ -39,7 +44,7 @@ export function AppTabs({ activeLayer, onGoHome, hasPrediction = false }: AppTab
       </div>
 
       {/* Progress display berdasarkan referensi */}
-      <div className="flex flex-col flex-1 max-w-[500px] gap-1.5 md:ml-6">
+      <div className="flex flex-col flex-1 max-w-125 gap-1.5 md:ml-6">
         <div className="flex justify-between items-end text-[10px] font-extrabold text-[#141413] uppercase tracking-wider select-none px-0.5">
           <span className="text-[#F37338]">{progressPercentage}%</span>
           <span className="text-[#696969]">{getStepText(activeLayer)}</span>
