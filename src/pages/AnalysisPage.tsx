@@ -24,7 +24,11 @@ export function AnalysisPage({
 }: AnalysisPageProps) {
   return (
     <main className="page-shell">
-      <AnalysisHeader onPrevStep={onPrevStep} onNextStep={onNextStep} isNextDisabled={!prediction} />
+      <AnalysisHeader
+        onPrevStep={onPrevStep}
+        onNextStep={onNextStep}
+        isNextDisabled={!prediction}
+      />
 
       {!prediction ? (
         <AnalysisEmptyState onGoToSalary={onGoToSalary} />
@@ -55,9 +59,7 @@ function AnalysisHeader({
     <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-10">
       <div>
         <p className="eyebrow">Decision Support System</p>
-        <h1 className="page-title mt-2">
-          Analisis Karir &amp; Kelayakan
-        </h1>
+        <h1 className="page-title mt-2">Analisis Karir &amp; Kelayakan</h1>
         <p className="page-description">
           Indeks kelayakan berbasis data riil: rasio hunian, kualifikasi profil,
           dan kepadatan pasar kerja Jabodetabek.

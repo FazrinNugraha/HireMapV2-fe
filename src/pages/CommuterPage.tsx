@@ -1,5 +1,8 @@
 import { CommuterOptionsCard } from "../components/CommuterOptionsCard";
-import type { SalaryPredictionResponse, SpatialSummaryItem } from "../types/api";
+import type {
+  SalaryPredictionResponse,
+  SpatialSummaryItem,
+} from "../types/api";
 
 type CommuterPageProps = {
   prediction: SalaryPredictionResponse | null;
@@ -20,11 +23,10 @@ export function CommuterPage({
     <main className="page-shell flex flex-col gap-6 md:gap-8">
       <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="page-title">
-            Commuter Simulator
-          </h1>
+          <h1 className="page-title">Commuter Simulator</h1>
           <p className="page-description">
-            Hitung jarak, waktu tempuh, dan biaya komuter harian dari lokasi kos ke tempat kerja.
+            Hitung jarak, waktu tempuh, dan biaya komuter harian dari lokasi kos
+            ke tempat kerja.
           </p>
         </div>
 
@@ -83,7 +85,8 @@ function CommuterEmptyState({ onGoToSalary }: { onGoToSalary: () => void }) {
         Simulator Terkunci
       </h3>
       <p className="max-w-md text-sm text-[#696969]">
-        Untuk menggunakan simulator komuter, Anda perlu menentukan target lokasi kerja melalui halaman Salary Prediction terlebih dahulu.
+        Untuk menggunakan simulator komuter, Anda perlu menentukan target lokasi
+        kerja melalui halaman Salary Prediction terlebih dahulu.
       </p>
       <button
         type="button"

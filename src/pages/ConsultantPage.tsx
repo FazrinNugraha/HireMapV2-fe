@@ -35,11 +35,10 @@ export function ConsultantPage({
       {/* Header section with step back navigation */}
       <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="page-title">
-            AI Consultant
-          </h1>
+          <h1 className="page-title">AI Consultant</h1>
           <p className="page-description">
-            Konsultasi karir interaktif yang didukung AI berbasis profil kelayakan Anda.
+            Konsultasi karir interaktif yang didukung AI berbasis profil
+            kelayakan Anda.
           </p>
         </div>
 

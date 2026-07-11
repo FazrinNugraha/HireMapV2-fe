@@ -27,7 +27,13 @@ type SpatialPageProps = {
 };
 
 // Halaman peta: membandingkan peluang kerja, lokasi, dan opsi komuter.
-export function SpatialPage({ metadata, prediction, onGoToSalary, onPrevStep, onNextStep }: SpatialPageProps) {
+export function SpatialPage({
+  metadata,
+  prediction,
+  onGoToSalary,
+  onPrevStep,
+  onNextStep,
+}: SpatialPageProps) {
   const [summary, setSummary] = useState<SpatialSummaryItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState(
     prediction?.kategori ?? ALL_INDUSTRIES,
@@ -45,7 +51,9 @@ export function SpatialPage({ metadata, prediction, onGoToSalary, onPrevStep, on
     getSpatialSummary()
       .then((data) => {
         setSummary(data);
-        setSelectedLocation((current) => current || data[0]?.Lokasi_Clean || "");
+        setSelectedLocation(
+          (current) => current || data[0]?.Lokasi_Clean || "",
+        );
       })
       .catch((err: unknown) => {
         setError(
@@ -94,11 +102,18 @@ export function SpatialPage({ metadata, prediction, onGoToSalary, onPrevStep, on
 
   return (
     <main className="page-shell flex flex-col gap-6 md:gap-8">
-      <SpatialHeader onPrevStep={onPrevStep} onNextStep={onNextStep} isNextDisabled={!prediction} />
+      <SpatialHeader
+        onPrevStep={onPrevStep}
+        onNextStep={onNextStep}
+        isNextDisabled={!prediction}
+      />
 
       {!prediction && (
         <div className="rounded-[24px] border border-[#E5E2E0] bg-white p-5 text-xs text-[#696969] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-sm md:rounded-[32px] md:p-6">
-          <span>Isi data karir di menu Salary Prediction untuk mempersonalisasi peta ini ke profil Anda.</span>
+          <span>
+            Isi data karir di menu Salary Prediction untuk mempersonalisasi peta
+            ini ke profil Anda.
+          </span>
           <button
             type="button"
             onClick={onGoToSalary}
@@ -149,9 +164,7 @@ function SpatialHeader({
   return (
     <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h1 className="page-title">
-          Spatial Career Map
-        </h1>
+        <h1 className="page-title">Spatial Career Map</h1>
         <p className="page-description">
           Bandingkan peluang kerja dan biaya hidup di seluruh Jabodetabek.
         </p>
@@ -474,7 +487,8 @@ function RegionalRankingTable({
             Regional Ranking
           </h2>
           <p className="mt-1 text-xs text-[#696969]">
-            Peringkat wilayah berdasarkan peluang kerja dan keterjangkauan hunian.
+            Peringkat wilayah berdasarkan peluang kerja dan keterjangkauan
+            hunian.
           </p>
         </div>
       </div>
