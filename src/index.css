@@ -304,8 +304,8 @@ video {
 
 /* Logo in navbar: larger size and design system color */
 .landing-nav-logo-wrap {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -314,8 +314,8 @@ video {
 }
 
 .landing-nav-logo-img {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   object-fit: contain;
   /* Tint the black logo to our Signal Orange */
   filter: invert(50%) sepia(90%) saturate(500%) hue-rotate(345deg) brightness(100%) contrast(100%);

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { ErrorBanner } from './components/ErrorBanner'
+import { LoadingStateCard } from './components/LoadingStateCard'
 import { AppShell } from './components/layout/AppShell'
 import {
   DEFAULT_CHAT_MESSAGE,
@@ -24,16 +25,19 @@ import type {
 import type { AppLayer } from './types/navigation'
 
 const PREDICTION_LOADING_DELAY_MS = 2200
+const LANDING_LOADING_DELAY_MS = 1800
 const CHAT_LOADING_DELAY_MS = 3000
 
 type LoadingState = {
   prediction: boolean
   chat: boolean
+  landingTransition: boolean
 }
 
 const INITIAL_LOADING_STATE: LoadingState = {
   prediction: false,
   chat: false,
+  landingTransition: false,
 }
 
 // Root aplikasi: menyimpan state global yang dipakai lintas tab.
@@ -55,6 +59,24 @@ export default function App() {
   } = useMetadata(setForm)
 
   const visibleError = error ?? metadataError
+
+  async function handleLandingStart() {
+    if (loading.landingTransition) return
+
+    setError(null)
+    setLoadingState('landingTransition', true)
+
+    try {
+      const startedAt = Date.now()
+
+      await waitForMinimumDuration(startedAt, LANDING_LOADING_DELAY_MS)
+
+      setActiveLayer('salary')
+      setShowLanding(false)
+    } finally {
+      setLoadingState('landingTransition', false)
+    }
+  }
 
   // Data spasial dipakai oleh Analisis Karir untuk DSS score.
   useEffect(() => {
@@ -135,7 +157,22 @@ export default function App() {
   }
 
   if (showLanding) {
-    return <LandingPage onStart={() => setShowLanding(false)} />
+    return (
+      <div className="relative min-h-screen">
+        <LandingPage onStart={handleLandingStart} />
+
+        {loading.landingTransition && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#F3F0EE]/90 px-6 backdrop-blur-[2px]">
+            <div className="w-full max-w-[560px]">
+              <LoadingStateCard
+                title="Preparing your test..."
+                description="Menyiapkan form prediksi gaji, metadata jabatan, dan konteks analisis awal agar transisi terasa lebih natural."
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    )
   }
 
   return (
