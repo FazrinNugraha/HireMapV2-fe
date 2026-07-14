@@ -81,7 +81,7 @@ export function HousingAffordabilityCard({
     <section className="flex h-full w-full flex-col justify-between rounded-[24px] border border-[#E5E2E0] bg-white p-5 shadow-[0_8px_30px_rgba(0,0,0,0.06)] md:rounded-[32px] md:p-7">
       <div>
         <FeatureHeader
-          title="Housing Affordability"
+          title="Biaya Hunian"
           action={
             <span
               className="rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider"
