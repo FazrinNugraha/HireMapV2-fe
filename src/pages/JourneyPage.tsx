@@ -8,6 +8,8 @@ const CAREER_LOADING_DELAY_MS = 2400;
 
 type JourneyPageProps = {
   prediction: SalaryPredictionResponse | null;
+  showCareerChart: boolean;
+  onSetShowCareerChart: (v: boolean) => void;
   onGoToSalary: () => void;
   onPrevStep: () => void;
   onNextStep: () => void;
@@ -16,31 +18,32 @@ type JourneyPageProps = {
 // Halaman baru khusus untuk proyeksi perjalanan karir (Step 3).
 export function JourneyPage({
   prediction,
+  showCareerChart,
+  onSetShowCareerChart,
   onGoToSalary,
   onPrevStep,
   onNextStep,
 }: JourneyPageProps) {
   const [isCareerLoading, setIsCareerLoading] = useState(false);
-  const [showCareerChart, setShowCareerChart] = useState(false);
   const prevPrediction = useRef<SalaryPredictionResponse | null>(null);
 
   // Reset panel proyeksi jika user menjalankan prediksi baru.
   useEffect(() => {
     if (prediction && prediction !== prevPrediction.current) {
       prevPrediction.current = prediction;
-      setShowCareerChart(false);
+      onSetShowCareerChart(false);
       setIsCareerLoading(false);
     }
-  }, [prediction]);
+  }, [prediction, onSetShowCareerChart]);
 
   // Memberi jeda loading agar transisi chart terasa konsisten dengan halaman lain.
   const handleShowCareerChart = () => {
     setIsCareerLoading(true);
-    setShowCareerChart(false);
+    onSetShowCareerChart(false);
 
     window.setTimeout(() => {
       setIsCareerLoading(false);
-      setShowCareerChart(true);
+      onSetShowCareerChart(true);
     }, CAREER_LOADING_DELAY_MS);
   };
 

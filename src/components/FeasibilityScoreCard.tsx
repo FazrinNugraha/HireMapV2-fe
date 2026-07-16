@@ -11,12 +11,31 @@ import {
 } from "chart.js";
 import { Doughnut, Bar } from "react-chartjs-2";
 import { FeatureHeader } from "./FeatureHeader";
-import { SelectField } from "./SelectField";
 import type {
   SalaryPredictionResponse,
   SpatialSummaryItem,
 } from "../types/api";
 import { formatRupiah } from "../utils/format";
+
+/** Tipe data yang disimpan oleh CommuterOptionsCard ke localStorage. */
+type LastCommuteSnapshot = {
+  origin: string;
+  destination: string;
+  distance: number;  // km
+  duration: number;  // menit
+  mode: string;      // "motor" | "car" | "krl"
+};
+
+const COMMUTE_STORAGE_KEY = "hiremap_last_commute";
+
+function readLastCommute(): LastCommuteSnapshot | null {
+  try {
+    const raw = localStorage.getItem(COMMUTE_STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as LastCommuteSnapshot) : null;
+  } catch {
+    return null;
+  }
+}
 
 ChartJS.register(
   ArcElement,
@@ -55,9 +74,9 @@ function calculateDistance(
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+    Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return Math.round(R * c * 10) / 10; // presisi 1 angka desimal
 }
@@ -132,17 +151,74 @@ function buildAuditPrompt(
   );
 }
 
+// Prompt audit spesifik per aspek kelayakan DSS.
+function buildDimensionAuditPrompt(
+  prediction: SalaryPredictionResponse,
+  dimLabel: string,
+  rawScore: number,
+  dimDesc: string
+): string {
+  return (
+    `Tolong buat analisis audit spesifik yang berfokus pada aspek "${dimLabel}" ` +
+    `untuk posisi ${prediction.judul} di ${prediction.lokasi}. ` +
+    `Skor kelayakan saya pada aspek ini adalah ${rawScore}/100. ` +
+    `Keterangan detail: ${dimDesc}. ` +
+    `Berikan analisis hambatan, peluang peningkatan, serta rekomendasi taktis yang relevan.`
+  );
+}
+
+// Helper untuk ikon SVG dimensi
+function getDimensionIcon(label: string) {
+  switch (label) {
+    case "Keterjangkauan Hunian":
+      return (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      );
+    case "Daya Saing Kualifikasi":
+      return (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+        </svg>
+      );
+    case "Kelayakan Commute":
+      return (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      );
+    case "Kepastian Prediksi Gaji":
+      return (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
 /**
  * Card Decision Support Score.
  * Menggabungkan housing, kualifikasi, commute, dan confidence menjadi skor kelayakan 0-100.
  */
 export function FeasibilityScoreCard({
   prediction,
-  spatialSummary,
+  spatialSummary: _spatialSummary,
   onRequestAudit,
 }: FeasibilityScoreCardProps) {
-  // State untuk domisili asal, default disamakan dengan lokasi kerja
-  const [domicile, setDomicile] = useState(prediction.lokasi);
+  // Baca snapshot simulasi commute terakhir dari localStorage.
+  // Diisi oleh CommuterOptionsCard setiap kali user mengubah pilihan di simulator.
+  const lastCommute = useMemo(() => readLastCommute(), []);
+  
+  // State untuk filter kategori status dimensi
+  const [statusFilter, setStatusFilter] = useState<"all" | "layak" | "cukup" | "evaluasi">("all");
+
+  // Gunakan jarak dari simulasi nyata; 50 (netral) jika belum pernah simulasi.
+  const distance = lastCommute?.distance ?? null;
+  const domicile = lastCommute?.origin ?? null;
 
   // 1. Keterjangkauan Hunian (35%)
   const ratio = prediction.rasio_kos;
@@ -159,32 +235,9 @@ export function FeasibilityScoreCard({
     Math.max(0, Math.round(((mult - 0.6) / (1.8 - 0.6)) * 100)),
   );
 
-  // Ambil data koordinat kerja (tujuan) dan domisili (asal) untuk Commute (20%)
-  const destItem = useMemo(() => {
-    return spatialSummary.find(
-      (s) => s.Lokasi_Clean.toLowerCase() === prediction.lokasi.toLowerCase(),
-    );
-  }, [spatialSummary, prediction.lokasi]);
-
-  const originItem = useMemo(() => {
-    return spatialSummary.find(
-      (s) => s.Lokasi_Clean.toLowerCase() === domicile.toLowerCase(),
-    );
-  }, [spatialSummary, domicile]);
-
-  const distance = useMemo(() => {
-    if (!destItem || !originItem) return 0;
-    if (destItem.Lokasi_Clean === originItem.Lokasi_Clean) return 0;
-    return calculateDistance(
-      originItem.lat,
-      originItem.lon,
-      destItem.lat,
-      destItem.lon,
-    );
-  }, [destItem, originItem]);
-
+  // 3. Kelayakan Commute (20%) — dari hasil simulasi TomTom/KRL di CommuterOptionsCard.
   const commuteScore = useMemo(() => {
-    if (distance === 0) return 100;
+    if (distance === null) return 50; // belum pernah simulasi → skor netral
     if (distance < 5) return 100;
     if (distance < 15) return 85;
     if (distance < 25) return 65;
@@ -235,9 +288,11 @@ export function FeasibilityScoreCard({
         rawScore: commuteScore,
         weightedScore: Math.round((commuteScore * 20) / 100),
         description:
-          distance === 0
-            ? `Domisili sama dengan lokasi kerja (${prediction.lokasi}). Jarak 0 km.`
-            : `Jarak commute harian sekitar ${distance} km dari ${domicile} ke ${prediction.lokasi}.`,
+          distance === null
+            ? "Belum ada data simulasi. Jalankan Commuter Simulator terlebih dulu."
+            : distance < 5
+              ? `Sangat dekat — ${distance} km dari ${domicile} ke ${prediction.lokasi} (via ${lastCommute?.mode ?? "-"}).`
+              : `Jarak commute harian ${distance} km dari ${domicile} ke ${prediction.lokasi} (via ${lastCommute?.mode ?? "-"}, ~${lastCommute?.duration ?? "?"} menit).`,
         statusColor:
           commuteScore >= 80
             ? "#16a34a"
@@ -268,10 +323,22 @@ export function FeasibilityScoreCard({
     commuteScore,
     distance,
     domicile,
+    lastCommute,
     prediction.lokasi,
     confidenceScore,
     confidence,
   ]);
+
+  // Filter dimensi berdasarkan status filter yang dipilih
+  const filteredDimensions = useMemo(() => {
+    return dimensions.filter((dim) => {
+      if (statusFilter === "all") return true;
+      if (statusFilter === "layak") return dim.rawScore >= 70;
+      if (statusFilter === "cukup") return dim.rawScore >= 40 && dim.rawScore < 70;
+      if (statusFilter === "evaluasi") return dim.rawScore < 40;
+      return true;
+    });
+  }, [dimensions, statusFilter]);
 
   const total = useMemo(() => {
     return dimensions.reduce((sum, d) => sum + d.weightedScore, 0);
@@ -296,14 +363,13 @@ export function FeasibilityScoreCard({
     animation: { duration: 900, easing: "easeOutQuart" as const },
     plugins: { legend: { display: false }, tooltip: { enabled: false } },
   };
-
   return (
     <div className="overflow-hidden rounded-[24px] bg-white shadow-[0_4px_20px_rgba(0,0,0,0.06)] md:rounded-[32px]">
       {/* Header band */}
       <div className="border-b border-[#E4E2DC] px-5 pb-5 pt-5 md:px-7 md:pb-6 md:pt-7">
         <FeatureHeader title="Indeks Kelayakan DSS" />
         <h3 className="mt-2 text-xl font-semibold tracking-[-0.02em] text-[#141413]">
-          Decision Support Score
+          Decision Index Score
         </h3>
         <p className="mt-1 text-sm text-[#696969]">
           Dihasilkan secara dinamis berdasarkan: hunian, kualifikasi profil,
@@ -312,6 +378,88 @@ export function FeasibilityScoreCard({
       </div>
 
       <div className="p-5 md:p-7">
+        {/* KPI Metrics Row (Ala bagian atas referensi Alerts & Triage) */}
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 mb-6">
+          {/* KPI 1: Rasio Kos */}
+          <div className="flex items-center justify-between p-4 bg-white border border-[#E5E2E0] rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+            <div>
+              <p className="text-[11px] font-bold text-[#696969] tracking-wider uppercase">Rasio Kos</p>
+              <p className="text-lg font-extrabold text-[#141413] mt-1">{ratio.toFixed(1)}%</p>
+            </div>
+            <span
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+              style={{
+                backgroundColor: `${dimensions[0].statusColor}18`,
+                color: dimensions[0].statusColor,
+              }}
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+            </span>
+          </div>
+
+          {/* KPI 2: Multiplier Profil */}
+          <div className="flex items-center justify-between p-4 bg-white border border-[#E5E2E0] rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+            <div>
+              <p className="text-[11px] font-bold text-[#696969] tracking-wider uppercase">Multiplier</p>
+              <p className="text-lg font-extrabold text-[#141413] mt-1">{mult.toFixed(2)}x</p>
+            </div>
+            <span
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+              style={{
+                backgroundColor: `${dimensions[1].statusColor}18`,
+                color: dimensions[1].statusColor,
+              }}
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+            </span>
+          </div>
+
+          {/* KPI 3: Simulasi Jarak */}
+          <div className="flex items-center justify-between p-4 bg-white border border-[#E5E2E0] rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+            <div>
+              <p className="text-[11px] font-bold text-[#696969] tracking-wider uppercase">Jarak Commute</p>
+              <p className="text-lg font-extrabold text-[#141413] mt-1">
+                {distance !== null ? `${distance.toFixed(1)} km` : "-"}
+              </p>
+            </div>
+            <span
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+              style={{
+                backgroundColor: distance === null ? "#f3f0ee" : `${dimensions[2].statusColor}18`,
+                color: distance === null ? "#696969" : dimensions[2].statusColor,
+              }}
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </span>
+          </div>
+
+          {/* KPI 4: Kepastian Gaji */}
+          <div className="flex items-center justify-between p-4 bg-white border border-[#E5E2E0] rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+            <div>
+              <p className="text-[11px] font-bold text-[#696969] tracking-wider uppercase">Kepastian Gaji</p>
+              <p className="text-lg font-extrabold text-[#141413] mt-1">{confidence}</p>
+            </div>
+            <span
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+              style={{
+                backgroundColor: `${dimensions[3].statusColor}18`,
+                color: dimensions[3].statusColor,
+              }}
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </span>
+          </div>
+        </div>
+
         {/* Score + Donut row */}
         <div className="flex flex-col gap-4 border-b border-[#E4E2DC] pb-5 sm:flex-row sm:items-center sm:gap-6">
           {/* Chart.js Doughnut */}
@@ -386,120 +534,167 @@ export function FeasibilityScoreCard({
                     d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L18 10l-4.714 1.143L11 18l-2.286-6.857L4 10l4.714-1.143L11 3z"
                   />
                 </svg>
-                <span>Audit dengan AI</span>
+                <span>Audit Lengkap dengan AI</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Input panel untuk pemilihan domisili (Commute parameter control) */}
+        {/* Banner hasil simulasi commute — menggantikan dropdown domisili */}
         <div className="mt-6">
-          <div className="flex flex-col gap-2 rounded-2xl bg-[#F9F8F6] p-4 border border-[#E4E2DC] transition-all hover:border-[#A0A09A]">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#696969]">
-                Domisili Anda (Asal)
+          {lastCommute ? (
+            <div className="flex items-start gap-3 rounded-2xl bg-[#F0FDF4] border border-[#BBF7D0] p-4">
+              {/* Ikon centang */}
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#16a34a]">
+                <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
               </span>
-              <SelectField
-                value={domicile}
-                options={spatialSummary.map((item) => item.Lokasi_Clean)}
-                onChange={setDomicile}
-                variant="outline"
-              />
+              <div className="flex flex-col gap-0.5">
+                <span className="text-xs font-bold text-[#15803d] uppercase tracking-wider">Skor dari Simulasi Terakhir</span>
+                <p className="text-sm font-semibold text-[#141413]">
+                  {lastCommute.origin} → {lastCommute.destination}
+                </p>
+                <p className="text-[11px] text-[#4b7c60]">
+                  {lastCommute.distance} km • ~{lastCommute.duration} menit • via {lastCommute.mode}
+                </p>
+              </div>
             </div>
-            <p className="text-[11px] text-[#A0A09A]">
-              Pilih domisili saat ini untuk menghitung jarak & kelayakan commute
-              ke {prediction.lokasi}.
-            </p>
+          ) : (
+            <div className="flex items-start gap-3 rounded-2xl bg-[#FFFBEB] border border-[#FDE68A] p-4">
+              {/* Ikon info */}
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#ca8a04]">
+                <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3a9 9 0 100 18A9 9 0 0012 3z" />
+                </svg>
+              </span>
+              <div className="flex flex-col gap-0.5">
+                <span className="text-xs font-bold text-[#a16207] uppercase tracking-wider">Simulasi Belum Dijalankan</span>
+                <p className="text-[11px] text-[#78580a]">
+                  Buka <span className="font-bold">Commuter Simulator</span> dan pilih kota asal untuk mendapatkan skor commute yang akurat. Saat ini menggunakan skor netral (50).
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Filter bar (Ala filter status tab di referensi) */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-t border-[#E4E2DC] pt-6 mt-6">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-bold text-[#696969] uppercase tracking-wider">Filter Dimensi:</span>
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { key: "all", label: "Semua" },
+                { key: "layak", label: "Layak (≥ 70)" },
+                { key: "cukup", label: "Cukup (40-69)" },
+                { key: "evaluasi", label: "Perlu Evaluasi (< 40)" },
+              ].map((btn) => (
+                <button
+                  key={btn.key}
+                  type="button"
+                  onClick={() => setStatusFilter(btn.key as any)}
+                  className={`px-3 py-1 text-[11px] font-bold rounded-full transition-all border cursor-pointer ${
+                    statusFilter === btn.key
+                      ? "bg-[#141413] text-white border-[#141413]"
+                      : "bg-[#FCFBFA] text-[#696969] border-[#E4E2DC] hover:border-[#A0A09A]"
+                  }`}
+                >
+                  {btn.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Dimension breakdown using interactive horizontal mini bar charts */}
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {dimensions.map((dim) => {
-            // Mini bar ini merepresentasikan kontribusi per dimensi ke skor total.
-            const miniBarData = {
-              labels: [""],
-              datasets: [
-                {
-                  label: "Skor",
-                  data: [dim.rawScore],
-                  backgroundColor: dim.statusColor,
-                  borderRadius: 6,
-                  borderSkipped: false,
-                },
-                {
-                  label: "Sisa",
-                  data: [100 - dim.rawScore],
-                  backgroundColor: "#E4E2DC",
-                  borderRadius: 6,
-                  borderSkipped: false,
-                },
-              ],
-            };
-
-            const miniBarOptions: ChartOptions<"bar"> = {
-              indexAxis: "y" as const,
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: {
-                x: {
-                  stacked: true,
-                  display: false,
-                  max: 100,
-                },
-                y: {
-                  stacked: true,
-                  display: false,
-                },
-              },
-              plugins: {
-                legend: { display: false },
-                tooltip: { enabled: false },
-              },
-            };
-
-            return (
+        {/* Dimension Breakdown ala Alerts Triage list items (Horizontal list) */}
+        <div className="mt-6 flex flex-col gap-4">
+          {filteredDimensions.length === 0 ? (
+            <div className="text-center py-10 border-2 border-dashed border-[#E4E2DC] rounded-[24px] bg-[#FCFBFA]">
+              <p className="text-sm font-semibold text-[#696969]">Tidak ada aspek DSS dalam kategori filter ini.</p>
+            </div>
+          ) : (
+            filteredDimensions.map((dim) => (
               <div
                 key={dim.label}
-                className="flex flex-col gap-3 rounded-2xl border border-[#E5E2E0] bg-white p-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:border-[#D1CFC9]"
+                className="group relative overflow-hidden rounded-[20px] border border-[#E5E2E0] bg-white p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:shadow-[0_6px_16px_rgba(0,0,0,0.05)] hover:border-[#D1CFC9] flex flex-col md:flex-row md:items-center justify-between gap-4"
+                style={{ borderLeft: `6px solid ${dim.statusColor}` }}
               >
-                {/* Header: Label, Weight & Score Badge */}
-                <div className="flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <h4 className="text-sm font-bold text-[#141413] truncate">
-                      {dim.label}
-                    </h4>
-                    <div className="flex items-center gap-1.5 mt-0.5 text-[10px] font-semibold text-[#696969]">
-                      <span>bobot {dim.weight}%</span>
-                      <span>*</span>
-                      <span>+{dim.weightedScore} DSS</span>
-                    </div>
-                  </div>
-
-                  {/* Score badge */}
+                {/* Bagian kiri: Icon + Informasi utama */}
+                <div className="flex-1 min-w-0 flex items-start gap-4">
+                  {/* Circular Icon Container */}
                   <span
-                    className="text-xs font-extrabold px-2.5 py-0.5 rounded-full shrink-0"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full mt-1"
                     style={{
-                      backgroundColor: `${dim.statusColor}18`,
+                      backgroundColor: `${dim.statusColor}12`,
                       color: dim.statusColor,
                     }}
                   >
-                    {dim.rawScore}/100
+                    {getDimensionIcon(dim.label)}
                   </span>
+
+                  <div className="flex-1 min-w-0">
+                    {/* Pill labels */}
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="rounded-full px-2 py-0.5 text-[9px] font-bold bg-[#F3F0EE] text-[#696969] uppercase tracking-wider">
+                        Bobot {dim.weight}%
+                      </span>
+                      <span className="rounded-full px-2 py-0.5 text-[9px] font-bold bg-[#EAFDF0] text-[#15803d]">
+                        +{dim.weightedScore} DSS
+                      </span>
+                      <span
+                        className="rounded-full px-2 py-0.5 text-[9px] font-extrabold"
+                        style={{
+                          backgroundColor: `${dim.statusColor}18`,
+                          color: dim.statusColor,
+                        }}
+                      >
+                        Skor: {dim.rawScore}/100
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h4 className="text-base font-extrabold text-[#141413] mt-2 tracking-tight">
+                      {dim.label}
+                    </h4>
+
+                    {/* Description */}
+                    <p className="text-xs leading-relaxed text-[#696969] mt-1 max-w-2xl">
+                      {dim.description}
+                    </p>
+
+                    {/* Horizontal Progress Bar ala SLA Response Time di referensi */}
+                    <div className="w-full mt-4 max-w-md">
+                      <div className="flex justify-between items-center text-[9px] text-[#A0A09A] mb-1 font-bold uppercase tracking-wider">
+                        <span>Kontribusi Kelayakan</span>
+                        <span>{dim.rawScore}%</span>
+                      </div>
+                      <div className="h-1.5 w-full bg-[#F3F0EE] rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-700"
+                          style={{
+                            width: `${dim.rawScore}%`,
+                            backgroundColor: dim.statusColor,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Chart.js Horizontal Progress Bar */}
-                <div className="h-2 w-full my-1 overflow-hidden rounded-full">
-                  <Bar data={miniBarData} options={miniBarOptions} />
+                {/* Bagian kanan: Action Button */}
+                <div className="shrink-0 flex items-center justify-end mt-2 md:mt-0">
+                  <button
+                    type="button"
+                    onClick={() => onRequestAudit(buildDimensionAuditPrompt(prediction, dim.label, dim.rawScore, dim.description))}
+                    className="w-full md:w-auto cursor-pointer rounded-full border border-[#E5E2E0] bg-[#FCFBFA] hover:bg-[#141413] hover:text-white px-4 py-2 text-xs font-bold text-[#141413] transition-all duration-300 hover:shadow-sm hover:border-[#141413] active:scale-95 text-center"
+                  >
+                    Audit Spesifik
+                  </button>
                 </div>
-
-                {/* Description Text */}
-                <p className="text-xs leading-relaxed text-[#696969] border-t border-[#F0EFEA] pt-2">
-                  {dim.description}
-                </p>
               </div>
-            );
-          })}
+            ))
+          )}
         </div>
 
         {/* Data source note */}

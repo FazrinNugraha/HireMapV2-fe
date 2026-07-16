@@ -3,10 +3,15 @@ import type {
   SalaryPredictionResponse,
   SpatialSummaryItem,
 } from "../types/api";
+import type { ModeKey } from "../components/commuter/types";
 
 type CommuterPageProps = {
   prediction: SalaryPredictionResponse | null;
   spatialSummary: SpatialSummaryItem[];
+  selectedOrigin: string;
+  activeMode: ModeKey;
+  onOriginChange: (origin: string) => void;
+  onModeChange: (mode: ModeKey) => void;
   onGoToSalary: () => void;
   onPrevStep: () => void;
   onNextStep: () => void;
@@ -15,6 +20,10 @@ type CommuterPageProps = {
 export function CommuterPage({
   prediction,
   spatialSummary,
+  selectedOrigin,
+  activeMode,
+  onOriginChange,
+  onModeChange,
   onGoToSalary,
   onPrevStep,
   onNextStep,
@@ -54,6 +63,10 @@ export function CommuterPage({
           <CommuterOptionsCard
             prediction={prediction}
             spatialSummary={spatialSummary}
+            selectedOrigin={selectedOrigin}
+            activeMode={activeMode}
+            onOriginChange={onOriginChange}
+            onModeChange={onModeChange}
           />
         </section>
       ) : (

@@ -23,6 +23,7 @@ import type {
   SpatialSummaryItem,
 } from './types/api'
 import type { AppLayer } from './types/navigation'
+import type { ModeKey } from './components/commuter/types'
 
 const PREDICTION_LOADING_DELAY_MS = 2200
 const LANDING_LOADING_DELAY_MS = 1800
@@ -51,6 +52,11 @@ export default function App() {
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([])
   const [loading, setLoading] = useState<LoadingState>(INITIAL_LOADING_STATE)
   const [error, setError] = useState<string | null>(null)
+
+  // State commuter & career journey diangkat ke sini agar tidak ter-reset saat navigasi antar step.
+  const [commuterOrigin, setCommuterOrigin] = useState<string>('')
+  const [commuterMode, setCommuterMode] = useState<ModeKey>('motor')
+  const [showCareerChart, setShowCareerChart] = useState(false)
 
   const {
     metadata,
@@ -103,6 +109,10 @@ export default function App() {
 
       setPrediction(result)
       setChatHistory([])
+      // Reset state commuter & career journey saat ada prediksi baru
+      setCommuterOrigin('')
+      setCommuterMode('motor')
+      setShowCareerChart(false)
     } catch (predictionError) {
       setError(getErrorMessage(predictionError, 'Gagal menghitung prediksi gaji.'))
     } finally {
@@ -212,6 +222,8 @@ export default function App() {
       {activeLayer === 'journey' && (
         <JourneyPage
           prediction={prediction}
+          showCareerChart={showCareerChart}
+          onSetShowCareerChart={setShowCareerChart}
           onGoToSalary={() => setActiveLayer('salary')}
           onPrevStep={() => setActiveLayer('spatial')}
           onNextStep={() => setActiveLayer('commuter')}
@@ -222,6 +234,10 @@ export default function App() {
         <CommuterPage
           prediction={prediction}
           spatialSummary={spatialSummary}
+          selectedOrigin={commuterOrigin}
+          activeMode={commuterMode}
+          onOriginChange={setCommuterOrigin}
+          onModeChange={setCommuterMode}
           onGoToSalary={() => setActiveLayer('salary')}
           onPrevStep={() => setActiveLayer('journey')}
           onNextStep={() => setActiveLayer('analysis')}

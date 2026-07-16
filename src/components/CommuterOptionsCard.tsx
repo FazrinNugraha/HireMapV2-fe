@@ -23,9 +23,15 @@ import { CommuterDetailCard } from "./commuter/CommuterDetailCard";
 import { PerformanceDashboard } from "./commuter/PerformanceDashboard";
 import { SelectField } from "./SelectField";
 
+const COMMUTE_STORAGE_KEY = "hiremap_last_commute";
+
 type CommuterOptionsCardProps = {
   prediction: SalaryPredictionResponse;
   spatialSummary: SpatialSummaryItem[];
+  selectedOrigin: string;
+  activeMode: ModeKey;
+  onOriginChange: (origin: string) => void;
+  onModeChange: (mode: ModeKey) => void;
 };
 
 /**
@@ -36,6 +42,10 @@ type CommuterOptionsCardProps = {
 export function CommuterOptionsCard({
   prediction,
   spatialSummary,
+  selectedOrigin,
+  activeMode,
+  onOriginChange,
+  onModeChange,
 }: CommuterOptionsCardProps) {
   // Lokasi tujuan kerja
   const targetLocation = spatialSummary.find(
@@ -68,25 +78,23 @@ export function CommuterOptionsCard({
       .sort((a, b) => b.savings - a.savings);
   }, [prediction.estimasi_kos, spatialSummary, targetLocation]);
 
-  // State untuk kota asal aktif dan moda transportasi aktif
-  const [selectedOrigin, setSelectedOrigin] = useState<string>(
-    commuterOptions[0]?.lokasi || "",
-  );
-  const [activeMode, setActiveMode] = useState<ModeKey>("motor");
-
   // Route Cache & Requested Ref
   const [routeCache, setRouteCache] = useState<Record<string, RouteInfo>>({});
   const requestedRoutesRef = useRef(new Set<string>());
+  // Gunakan ref agar onOriginChange tidak perlu masuk dependency array useEffect
+  const onOriginChangeRef = useRef(onOriginChange);
+  onOriginChangeRef.current = onOriginChange;
 
-  // Sinkronisasi kota asal jika list berubah
+  // Sinkronisasi kota asal ke default pertama jika belum ada pilihan atau pilihan tidak valid
   useEffect(() => {
     if (
       commuterOptions.length > 0 &&
       (!selectedOrigin ||
         !commuterOptions.some((opt) => opt.lokasi === selectedOrigin))
     ) {
-      setSelectedOrigin(commuterOptions[0].lokasi);
+      onOriginChangeRef.current(commuterOptions[0].lokasi);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commuterOptions, selectedOrigin]);
 
   // Opsi komuter yang terpilih saat ini
@@ -129,20 +137,20 @@ export function CommuterOptionsCard({
       );
       const route: RouteInfo = krlData
         ? {
-            distance: krlData.jarak,
-            duration: krlData.waktu,
-            coordinates: [
-              [routeRequest.origin.lat, routeRequest.origin.lon],
-              [routeRequest.destination.lat, routeRequest.destination.lon],
-            ],
-            source: "static",
-            biaya: krlData.biaya,
-          }
+          distance: krlData.jarak,
+          duration: krlData.waktu,
+          coordinates: [
+            [routeRequest.origin.lat, routeRequest.origin.lon],
+            [routeRequest.destination.lat, routeRequest.destination.lon],
+          ],
+          source: "static",
+          biaya: krlData.biaya,
+        }
         : buildFallbackRoute(
-            routeRequest.origin,
-            routeRequest.destination,
-            "krl",
-          );
+          routeRequest.origin,
+          routeRequest.destination,
+          "krl",
+        );
 
       setRouteCache((current) => ({ ...current, [routeRequest.key]: route }));
     } else {
@@ -177,6 +185,29 @@ export function CommuterOptionsCard({
       },
     ];
   }, [activeOption, targetLocation, routeRequest, routeCache, activeMode]);
+
+  // Simpan snapshot simulasi aktif ke localStorage agar FeasibilityScoreCard
+  // bisa membaca jarak & durasi nyata untuk menghitung skor commute DSS.
+  useEffect(() => {
+    if (!activeOption || !targetLocation) return;
+
+    const route = routeRequest ? routeCache[routeRequest.key] : undefined;
+    const modeLabel = MODES.find((m) => m.key === activeMode)?.label ?? activeMode;
+
+    const snapshot = {
+      origin: activeOption.lokasi,
+      destination: targetLocation.Lokasi_Clean,
+      distance: route?.distance ?? activeOption.fallbackDistance,
+      duration: route?.duration ?? Math.round((activeOption.fallbackDistance / 40) * 60),
+      mode: modeLabel,
+    };
+
+    try {
+      localStorage.setItem(COMMUTE_STORAGE_KEY, JSON.stringify(snapshot));
+    } catch {
+      // localStorage tidak tersedia (mode private/incognito)
+    }
+  }, [activeOption, targetLocation, activeMode, routeRequest, routeCache]);
 
   if (!targetLocation || spatialSummary.length === 0 || !activeOption)
     return null;
@@ -213,7 +244,7 @@ export function CommuterOptionsCard({
             options={commuterOptions.map((opt) => `Asal: ${opt.lokasi}`)}
             onChange={(val) => {
               const rawCity = val.replace("Asal: ", "");
-              setSelectedOrigin(rawCity);
+              onOriginChange(rawCity);
             }}
             variant="outline"
           />
@@ -226,7 +257,7 @@ export function CommuterOptionsCard({
               const label = val.replace("Moda: ", "");
               const found = MODES.find((m) => m.label === label);
               if (found) {
-                setActiveMode(found.key);
+                onModeChange(found.key);
               }
             }}
             variant="outline"
@@ -247,7 +278,7 @@ export function CommuterOptionsCard({
               allSelectedOrigins={commuterOptions.filter(
                 (opt) => opt.lokasi === selectedOrigin,
               )}
-              onSelectActiveOrigin={setSelectedOrigin}
+              onSelectActiveOrigin={onOriginChange}
             />
           </div>
 
