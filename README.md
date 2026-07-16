@@ -1,6 +1,6 @@
-# HireMap Frontend
+# HireVision Frontend
 
-React + Vite frontend untuk HireMap FastAPI backend.
+React + Vite frontend untuk HireVision FastAPI backend.
 
 ## Environment
 

@@ -32,7 +32,7 @@ export function AppFooter() {
         <div className="h-px bg-white/10" />
 
         <div className="mt-6 flex flex-col gap-2 text-xs text-white/35 md:flex-row md:items-center md:justify-between">
-          <span>(c) 2026 HireMap. All rights reserved.</span>
+          <span>(c) 2026 HireVision. All rights reserved.</span>
           <span>Data estimasi - bukan penawaran kerja resmi.</span>
         </div>
       </div>
@@ -45,7 +45,7 @@ function FooterBrand() {
   return (
     <div className="max-w-xs">
       <div className="mb-2 text-lg font-bold tracking-[-0.02em] text-white">
-        HireMap
+        HireVision
       </div>
       <p className="text-sm leading-6 text-white/50">
         Prediksi gaji, peta karir spasial, dan konsultasi AI untuk pasar kerja
