@@ -9,7 +9,7 @@ import {
   BarElement,
   type ChartOptions,
 } from "chart.js";
-import { Doughnut, Bar } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import { FeatureHeader } from "./FeatureHeader";
 import type {
   SalaryPredictionResponse,
@@ -61,25 +61,7 @@ type ScoreDimension = {
   statusColor: string;
 };
 
-// Haversine dipakai sebagai estimasi jarak dasar untuk skor commute DSS.
-function calculateDistance(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number,
-): number {
-  const R = 6371; // radius bumi dalam km
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-    Math.cos((lat2 * Math.PI) / 180) *
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return Math.round(R * c * 10) / 10; // presisi 1 angka desimal
-}
+
 
 // Mengubah total skor numerik menjadi label keputusan yang lebih mudah dipahami user.
 function getScoreGrade(score: number): {
@@ -345,7 +327,12 @@ export function FeasibilityScoreCard({
   }, [dimensions]);
 
   const grade = getScoreGrade(total);
-  const auditPrompt = buildAuditPrompt(prediction, total, distance, domicile);
+  const auditPrompt = buildAuditPrompt(
+    prediction,
+    total,
+    distance ?? 0,
+    domicile ?? "domisili tidak diketahui",
+  );
 
   // Data donut utama untuk menampilkan total skor DSS.
   const donutData = {
